@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>1.0.0.0</version>
+    <version>1.0.3.0</version>
     <id>Aylien.TextApi</id>
     <title>Aylien.TextApi</title>
     <description>Aylien Text API library for .NET</description>
@@ -10,8 +10,12 @@
     <licenseUrl>https://github.com/AYLIEN/aylien_textapi_csharp/LICENSE</licenseUrl>
     <projectUrl>https://github.com/AYLIEN/aylien_textapi_csharp</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <copyright>Copyright AYLIEN Inc. 2014</copyright>
+    <copyright>Copyright AYLIEN Inc. 2015</copyright>
     <releaseNotes>See GitHub for details of commits since previous version.</releaseNotes>
+    <tags>Aylien Text API Analysis</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" />
+    </dependencies>
   </metadata>
   <files>
     <file src="README.md" target="tools\README.md" />
