@@ -49,10 +49,10 @@ namespace Aylien.TextApi
         /// <param name="html">HTML as string</param>
         /// <param name="bestImage">Whether extract the best image of the article</param>
         /// <returns>A <see cref="Extract"/></returns>
-        public Extract Extract(string url = null, string html = null, bool bestImage = false)
+        public Extract Extract(string url = null, string html = null, bool bestImage = false, bool keepHtmlFormatting = false)
         {
             Extract extract = new Aylien.TextApi.Extract(configuration);
-            Response r = extract.call(url, html, bestImage.ToString());
+            Response r = extract.call(url, html, bestImage.ToString(), keepHtmlFormatting.ToString());
             extractRateLimitParameters(r);
             return extract;
         }

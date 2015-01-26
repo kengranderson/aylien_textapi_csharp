@@ -26,7 +26,7 @@ namespace Aylien.TextApi
     {
         public Extract(Configuration config) : base(config) { }
 
-        internal Response call(string url, string html, string bestImage)
+        internal Response call(string url, string html, string bestImage, string keepHtmlFormatting)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
@@ -38,6 +38,9 @@ namespace Aylien.TextApi
             
             if (!String.IsNullOrWhiteSpace(bestImage))
                 parameters["best_image"] = bestImage;
+
+            if (!String.IsNullOrWhiteSpace(keepHtmlFormatting))
+                parameters["keep_html_formatting"] = keepHtmlFormatting;
 
             Connection connection = new Connection(Configuration.Endpoints["Extract"], parameters, configuration);
             var response = connection.request();
