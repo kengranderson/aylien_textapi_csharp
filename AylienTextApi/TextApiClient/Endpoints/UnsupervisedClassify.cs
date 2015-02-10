@@ -36,7 +36,7 @@ namespace Aylien.TextApi
             if (!String.IsNullOrWhiteSpace(text))
                 parameters.Add(new Dictionary<string, string> { { "text", text } });
 
-            if (!String.IsNullOrWhiteSpace(numberOfConcepts))
+            if (!String.IsNullOrWhiteSpace(numberOfConcepts) && numberOfConcepts != "0")
                 parameters.Add(new Dictionary<string, string> { { "number_of_concepts", numberOfConcepts } });
 
             foreach (string klass in classes)
