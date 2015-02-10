@@ -28,13 +28,13 @@ namespace Aylien.TextApi
 
         internal Response call(string phrase, string count)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
             if (!String.IsNullOrWhiteSpace(phrase))
-                parameters["phrase"] = phrase;
+                parameters.Add(new Dictionary<string, string> { { "phrase", phrase } });
 
             if (!String.IsNullOrWhiteSpace(count) && count != "0")
-                parameters["count"] = count;
+                parameters.Add(new Dictionary<string, string> { { "count", count } });
 
             Connection connection = new Connection(Configuration.Endpoints["Related"], parameters, configuration);
             var response = connection.request();

@@ -28,19 +28,19 @@ namespace Aylien.TextApi
 
         internal Response call(string url, string html, string bestImage, string keepHtmlFormatting)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
             if (!String.IsNullOrWhiteSpace(url))
-                parameters["url"] = url;
+                parameters.Add(new Dictionary<string, string> { { "url", url } });
 
             if (!String.IsNullOrWhiteSpace(html))
-                parameters["html"] = html;
+                parameters.Add(new Dictionary<string, string> { { "html", html } });
             
             if (!String.IsNullOrWhiteSpace(bestImage))
-                parameters["best_image"] = bestImage;
+                parameters.Add(new Dictionary<string, string> { { "best_image", bestImage } });
 
             if (!String.IsNullOrWhiteSpace(keepHtmlFormatting))
-                parameters["keep_html_formatting"] = keepHtmlFormatting;
+                parameters.Add(new Dictionary<string, string> { { "keep_html_formatting", keepHtmlFormatting } });
 
             Connection connection = new Connection(Configuration.Endpoints["Extract"], parameters, configuration);
             var response = connection.request();

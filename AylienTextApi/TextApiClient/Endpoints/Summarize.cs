@@ -28,25 +28,25 @@ namespace Aylien.TextApi
 
         internal Response call(string text, string title, string url, string mode, string sentencesNumber, string sentencesPercentage)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
             if (!String.IsNullOrWhiteSpace(text))
-                parameters["text"] = text;
+                parameters.Add(new Dictionary<string, string> { { "text", text } });
 
             if (!String.IsNullOrWhiteSpace(title))
-                parameters["title"] = title;
+                parameters.Add(new Dictionary<string, string> { { "title", title } });
 
             if (!String.IsNullOrWhiteSpace(url))
-                parameters["url"] = url;
+                parameters.Add(new Dictionary<string, string> { { "url", url } });
 
             if (!String.IsNullOrWhiteSpace(mode))
-                parameters["mode"] = mode;
+                parameters.Add(new Dictionary<string, string> { { "mode", mode } });
 
             if (!String.IsNullOrWhiteSpace(sentencesNumber) && sentencesNumber != "0")
-                parameters["sentences_number"] = sentencesNumber;
+                parameters.Add(new Dictionary<string, string> { { "sentences_number", sentencesNumber } });
 
             if (!String.IsNullOrWhiteSpace(sentencesPercentage) && sentencesPercentage != "0")
-                parameters["sentences_percentage"] = sentencesPercentage;
+                parameters.Add(new Dictionary<string, string> { { "sentences_percentage", sentencesPercentage } });
 
             Connection connection = new Connection(Configuration.Endpoints["Summarize"], parameters, configuration);
             var response = connection.request();

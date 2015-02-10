@@ -27,11 +27,11 @@ namespace Aylien.TextApi
 {
     class Connection
     {
-        private Dictionary<string, string> Parameters { get; set; }
+        private List<Dictionary<string, string>> Parameters { get; set; }
         private HttpWebRequest Request { set; get; }
         private string RequestUri { set; get; }
 
-        public Connection(string endpoint, Dictionary<string, string> parameters, Configuration configuration)
+        public Connection(string endpoint, List<Dictionary<string, string>> parameters, Configuration configuration)
         {
             RequestUri = configuration.BaseUri + endpoint;
             Parameters = parameters;
@@ -64,8 +64,8 @@ namespace Aylien.TextApi
                 request.Method = configuration.Method;
 
                 var postData = Parameters.Aggregate("",
-                  (keyString, pair) =>
-                     "&" + pair.Key + "=" + Uri.EscapeDataString(pair.Value) + keyString
+                  (memo, pair) =>
+                     "&" + pair.First().Key + "=" + Uri.EscapeDataString(pair.First().Value) + memo
                   ).Substring(1);
 
                 var data = Encoding.UTF8.GetBytes(postData);
@@ -82,8 +82,8 @@ namespace Aylien.TextApi
             else if (configuration.Method == "GET")
             {
                 var query = Parameters.Aggregate("",
-                  (keyString, pair) =>
-                     "&" + pair.Key + "=" + Uri.EscapeDataString(pair.Value) + keyString
+                  (memo, pair) =>
+                     "&" + pair.First().Key + "=" + Uri.EscapeDataString(pair.First().Value) + memo
                      );
 
                 if (query != null && query.Length > 2)

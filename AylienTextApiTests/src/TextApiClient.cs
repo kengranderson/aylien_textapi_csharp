@@ -112,6 +112,25 @@ namespace Aylien.TextApi.Tests
         }
 
         [TestMethod]
+        public void ShouldReturnAnInstanceOfMicroformats()
+        {
+            setRequireVariables();
+            Microformats microformats = client.Microformats(url: url);
+
+            Assert.IsInstanceOfType(microformats, typeof(Microformats));
+        }
+
+        [TestMethod]
+        public void ShouldReturnAnInstanceOfUnsupervisedClassify()
+        {
+            setRequireVariables();
+            string[] classes = new string[] {"painting", "dancing"};
+            UnsupervisedClassify unsupervisedClassify = client.UnsupervisedClassify(url: url, classes: classes);
+
+            Assert.IsInstanceOfType(unsupervisedClassify, typeof(UnsupervisedClassify));
+        }
+
+        [TestMethod]
         public void ShouldNotReturnEmptyRateLimit()
         {
             setRequireVariables();

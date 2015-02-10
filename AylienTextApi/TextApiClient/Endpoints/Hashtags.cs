@@ -28,16 +28,16 @@ namespace Aylien.TextApi
 
         internal Response call(string url, string text, string language)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
             if (!String.IsNullOrWhiteSpace(url))
-                parameters["url"] = url;
+                parameters.Add(new Dictionary<string, string> { { "url", url } });
 
             if (!String.IsNullOrWhiteSpace(text))
-                parameters["text"] = text;
+                parameters.Add(new Dictionary<string, string> { { "text", text } });
 
             if (!String.IsNullOrWhiteSpace(language))
-                parameters["language"] = language;
+                parameters.Add(new Dictionary<string, string> { { "language", language } });
 
             Connection connection = new Connection(Configuration.Endpoints["Hashtags"], parameters, configuration);
             var response = connection.request();

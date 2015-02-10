@@ -22,11 +22,11 @@ using System.Collections.Generic;
 
 namespace Aylien.TextApi
 {
-    public class Entities : Base
+    public class UnsupervisedClassify : Base
     {
-        public Entities(Configuration config) : base(config) { }
+        public UnsupervisedClassify(Configuration config) : base(config) { }
 
-        internal Response call(string url, string text)
+        internal Response call(string url, string text, string[] classes, string numberOfConcepts)
         {
             List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
@@ -36,38 +36,36 @@ namespace Aylien.TextApi
             if (!String.IsNullOrWhiteSpace(text))
                 parameters.Add(new Dictionary<string, string> { { "text", text } });
 
-            Connection connection = new Connection(Configuration.Endpoints["Entities"], parameters, configuration);
+            if (!String.IsNullOrWhiteSpace(numberOfConcepts))
+                parameters.Add(new Dictionary<string, string> { { "number_of_concepts", numberOfConcepts } });
+
+            foreach (string klass in classes)
+            {
+                parameters.Add(new Dictionary<string, string> { { "class", klass } });
+            }
+            
+            Connection connection = new Connection(Configuration.Endpoints["UnsupervisedClassify"], parameters, configuration);
             var response = connection.request();
             populateData(response.ResponseResult);
 
             return response;
         }
-        
-        [JsonProperty("entities")]
-        public Entity EntitiesMember { get; set; }
+
+        public ClassificationClass[] Classes { get; set; }
         public string Text { get; set; }
 
         private void populateData(string jsonString)
         {
-            Entities m = JsonConvert.DeserializeObject<Entities>(jsonString);
+            UnsupervisedClassify m = JsonConvert.DeserializeObject<UnsupervisedClassify>(jsonString);
 
+            Classes = m.Classes;
             Text = m.Text;
-            EntitiesMember = m.EntitiesMember;
         }
     }
 
-    public class Entity
+    public class ClassificationClass
     {
-        public string[] Organization {get; set;}
-        public string[] Location {get; set;}
-        public string[] Person {get; set;}
-        public string[] Keyword {get; set;}
-        public string[] Date {get; set;}
-        public string[] Money { get; set; }
-        public string[] Percentage { get; set; }
-        public string[] Time {get; set;}
-        public string[] Url { get; set; }
-        public string[] Email { get; set; }
-        public string[] Phone { get; set; }
+        public string Label { get; set; }
+        public float Score { get; set; }
     }
 }

@@ -200,6 +200,35 @@ namespace Aylien.TextApi
         }
 
         /// <summary>
+        /// Returns Microformats.
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <returns>A <see cref="Microformats"/></returns>
+        public Microformats Microformats(string url)
+        {
+            Microformats microformats = new Aylien.TextApi.Microformats(configuration);
+            Response r = microformats.call(url);
+            extractRateLimitParameters(r);
+            return microformats;
+        }
+
+        /// <summary>
+        /// Returns Unsupervised Classfication.
+        /// </summary>
+        /// <param name="url">A valid URL</param>
+        /// <param name="text">Text</param>
+        /// <param name="classes">Classes</param>
+        /// <param name="numberOfConcepts">Number of Concepts</param>
+        /// <returns>A <see cref="UnsupervisedClassify"/></returns>
+        public UnsupervisedClassify UnsupervisedClassify(string url = null, string text = null, string[] classes = null, int numberOfConcepts = 0)
+        {
+            UnsupervisedClassify unsupervisedClassify = new Aylien.TextApi.UnsupervisedClassify(configuration);
+            Response r = unsupervisedClassify.call(url, text, classes, numberOfConcepts.ToString());
+            extractRateLimitParameters(r);
+            return unsupervisedClassify;
+        }
+
+        /// <summary>
         /// Returns Rate Limit of API calls.
         /// </summary>
         /// <returns> Return a Dictionary<string, int> of rate limit</returns>
