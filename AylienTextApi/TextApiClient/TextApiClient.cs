@@ -229,6 +229,19 @@ namespace Aylien.TextApi
         }
 
         /// <summary>
+        /// Assigns relevant tags to an image.
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <returns>A <see cref="ImageTags"/></returns>
+        public ImageTags ImageTags(string url)
+        {
+            ImageTags imageTags = new Aylien.TextApi.ImageTags(configuration);
+            Response r = imageTags.call(url);
+            extractRateLimitParameters(r);
+            return imageTags;
+        }
+
+        /// <summary>
         /// Returns Rate Limit of API calls.
         /// </summary>
         /// <returns> Return a Dictionary<string, int> of rate limit</returns>

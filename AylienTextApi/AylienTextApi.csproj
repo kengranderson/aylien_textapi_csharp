@@ -51,6 +51,7 @@
     <Compile Include="TextApiClient\Endpoints\Entities.cs" />
     <Compile Include="TextApiClient\Endpoints\Extract.cs" />
     <Compile Include="TextApiClient\Endpoints\Hashtags.cs" />
+    <Compile Include="TextApiClient\Endpoints\ImageTags.cs" />
     <Compile Include="TextApiClient\Endpoints\Language.cs" />
     <Compile Include="TextApiClient\Endpoints\Microformats.cs" />
     <Compile Include="TextApiClient\Endpoints\Related.cs" />

@@ -7,7 +7,7 @@ namespace Aylien.TextApi.Tests
     [TestClass]
     public class UnitTestClient
     {
-        private string url, text, phrase, title;
+        private string url, text, phrase, title, imageUrl;
         private Client client;
 
         private void setRequireVariables()
@@ -17,6 +17,7 @@ namespace Aylien.TextApi.Tests
 
             client = new Client(appId, appKey);
             url = "http://www.bbc.co.uk/news/world-australia-30544493#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa";
+            imageUrl = "https://consumeraffairs.global.ssl.fastly.net/files/news/hamburger.png";
             text = "John is a very good football player!";
             phrase = "Dublin";
             title = "Test title";
@@ -128,6 +129,15 @@ namespace Aylien.TextApi.Tests
             UnsupervisedClassify unsupervisedClassify = client.UnsupervisedClassify(url: url, classes: classes);
 
             Assert.IsInstanceOfType(unsupervisedClassify, typeof(UnsupervisedClassify));
+        }
+
+        [TestMethod]
+        public void ShouldReturnAnInstanceOfImageTags()
+        {
+            setRequireVariables();
+            ImageTags imageTags = client.ImageTags(url: imageUrl);
+
+            Assert.IsInstanceOfType(imageTags, typeof(ImageTags));
         }
 
         [TestMethod]

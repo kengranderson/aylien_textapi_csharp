@@ -34,7 +34,8 @@ namespace Aylien.TextApi
 	        {"Hashtags", "hashtags"},
 	        {"Entities", "entities"},
             {"Microformats", "microformats"},
-            {"UnsupervisedClassify", "classify/unsupervised"}
+            {"UnsupervisedClassify", "classify/unsupervised"},
+            {"ImageTags", "image-tags"}
         };
 
         internal static readonly Dictionary<string, string> Headers = new Dictionary<string, string>
