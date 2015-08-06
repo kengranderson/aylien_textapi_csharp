@@ -35,6 +35,7 @@ namespace Aylien.TextApi
 	        {"Entities", "entities"},
             {"Microformats", "microformats"},
             {"UnsupervisedClassify", "classify/unsupervised"},
+            {"Combined", "combined"},
             {"ImageTags", "image-tags"}
         };
 
@@ -45,7 +46,7 @@ namespace Aylien.TextApi
         };
 
         private string defaultBaseUri = "https://api.aylien.com/api/v1/";
-        private string defaultMethod = "GET";
+        private string defaultMethod = "POST";
         private string defaultUserAgent = "Aylien Text API C# Lib";
 
         public Configuration(string appId, string appKey)

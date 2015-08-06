@@ -47,6 +47,7 @@
     <Compile Include="TextApiClient\Connection.cs" />
     <Compile Include="TextApiClient\Endpoints\Base.cs" />
     <Compile Include="TextApiClient\Endpoints\Classify.cs" />
+    <Compile Include="TextApiClient\Endpoints\Combined.cs" />
     <Compile Include="TextApiClient\Endpoints\Concepts.cs" />
     <Compile Include="TextApiClient\Endpoints\Entities.cs" />
     <Compile Include="TextApiClient\Endpoints\Extract.cs" />

@@ -58,10 +58,15 @@ namespace Aylien.TextApi
         private void compileRequestParams(Configuration configuration)
         {
             HttpWebRequest request;
+
             if (configuration.Method == "POST")
             {
                 request = (HttpWebRequest)WebRequest.Create(RequestUri);
                 request.Method = configuration.Method;
+
+                request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+                request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+                request.UserAgent = configuration.UserAgent;
 
                 var postData = Parameters.Aggregate("",
                   (memo, pair) =>
@@ -94,15 +99,15 @@ namespace Aylien.TextApi
                 else
                     request = (HttpWebRequest)WebRequest.Create(RequestUri);
                 request.Method = configuration.Method;
+
+                request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+                request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+                request.UserAgent = configuration.UserAgent;
             }
             else
             {
                 throw new ArgumentException("Method should be GET or POST.");
             }
-
-            request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-            request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-            request.UserAgent = configuration.UserAgent;
 
             Request = request;
         }

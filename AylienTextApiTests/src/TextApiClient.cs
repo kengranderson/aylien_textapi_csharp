@@ -132,6 +132,16 @@ namespace Aylien.TextApi.Tests
         }
 
         [TestMethod]
+        public void ShouldReturnAnInstanceOfCombined()
+        {
+            setRequireVariables();
+            string[] endpoints = new string[] { "classify", "concepts", "entities", "extract", "hashtags", "language", "sentiment", "summarize" };
+            Combined combined = client.Combined(url: url, endpoints: endpoints);
+
+            Assert.IsInstanceOfType(combined, typeof(Combined));
+        }
+
+        [TestMethod]
         public void ShouldReturnAnInstanceOfImageTags()
         {
             setRequireVariables();

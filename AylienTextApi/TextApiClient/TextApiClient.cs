@@ -229,6 +229,21 @@ namespace Aylien.TextApi
         }
 
         /// <summary>
+        /// Runs multiple analysis operations in one API call.
+        /// </summary>
+        /// <param name="url">A valid URL</param>
+        /// <param name="text">Text</param>
+        /// <param name="endpoints">List of operations</param>
+        /// <returns>A <see cref="Combined"/></returns>
+        public Combined Combined(string url = null, string text = null, string[] endpoints = null)
+        {
+            Combined combined = new Aylien.TextApi.Combined(configuration);
+            Response r = combined.call(url, text, endpoints);
+            extractRateLimitParameters(r);
+            return combined;
+        }
+
+        /// <summary>
         /// Assigns relevant tags to an image.
         /// </summary>
         /// <param name="url">URL</param>
