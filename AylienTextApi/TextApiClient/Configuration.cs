@@ -26,6 +26,7 @@ namespace Aylien.TextApi
         {
 	        {"Extract", "extract"},
 	        {"Classify", "classify"},
+            {"ClassifyByTaxonomy", "classify/:taxonomy"},
 	        {"Summarize", "summarize"},
 	        {"Concepts", "concepts"},
 	        {"Sentiment", "sentiment"},

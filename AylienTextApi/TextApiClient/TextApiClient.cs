@@ -100,6 +100,24 @@ namespace Aylien.TextApi
         }
 
         /// <summary>
+        /// Classifies a piece of text according to specified taxonomy.
+        /// </summary>
+        /// <param name="taxonomy">Taxonomy to classify according to</param>
+        /// <param name="url">A valid URL</param>
+        /// <param name="text">Text</param>
+        /// <param name="language">Language of text. Valid options are
+        ///  en, de, fr, es, it, pt, and auto. If set to auto, it'll try to
+        ///  detect the language. Default is en.</param>
+        /// <returns>A <see cref="Classify"/></returns>
+        public ClassifyByTaxonomy ClassifyByTaxonomy(string taxonomy, string url = null, string text = null, string language = null)
+        {
+            ClassifyByTaxonomy classify = new Aylien.TextApi.ClassifyByTaxonomy(configuration);
+            Response r = classify.call(taxonomy, url, text, language);
+            extractRateLimitParameters(r);
+            return classify;
+        }
+
+        /// <summary>
         /// Detects sentiment of a document in terms of
         /// polarity ("positive" or "negative") and
         /// subjectivity ("subjective" or "objective").

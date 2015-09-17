@@ -44,6 +44,15 @@ namespace Aylien.TextApi
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="message">Message</param>
+        public Error(string message)
+        {
+            this.Message = message;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="ex"></param>
         /// <param name="closeResponse">If True, the WebException.Response object is closed.</param>
         public Error(WebException ex, bool closeResponse)

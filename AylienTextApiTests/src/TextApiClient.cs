@@ -7,7 +7,7 @@ namespace Aylien.TextApi.Tests
     [TestClass]
     public class UnitTestClient
     {
-        private string url, text, phrase, title, imageUrl;
+        private string url, text, phrase, title, imageUrl, taxonomy;
         private Client client;
 
         private void setRequireVariables()
@@ -21,6 +21,7 @@ namespace Aylien.TextApi.Tests
             text = "John is a very good football player!";
             phrase = "Dublin";
             title = "Test title";
+            taxonomy = "iab-qag";
         }
 
         [TestMethod]
@@ -148,6 +149,15 @@ namespace Aylien.TextApi.Tests
             ImageTags imageTags = client.ImageTags(url: imageUrl);
 
             Assert.IsInstanceOfType(imageTags, typeof(ImageTags));
+        }
+
+        [TestMethod]
+        public void ShouldReturnAnInstanceOfClassifyByTaxonomy()
+        {
+            setRequireVariables();
+            ClassifyByTaxonomy classifyByTaxonomy = client.ClassifyByTaxonomy(taxonomy, url: url);
+
+            Assert.IsInstanceOfType(classifyByTaxonomy, typeof(ClassifyByTaxonomy));
         }
 
         [TestMethod]
