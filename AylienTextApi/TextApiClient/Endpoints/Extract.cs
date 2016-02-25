@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
@@ -53,12 +54,14 @@ namespace Aylien.TextApi
         public string Article { get; set;}
         public string Image { get; set;}
         public string Author { get; set;}
+        public Nullable<DateTime> PublishDate { get; set; }
         public string[] Videos { get; set;}
         public string[] Feeds { get; set;}
         
         private void populateData(string jsonString)
         {
-            Extract m = JsonConvert.DeserializeObject<Extract>(jsonString);
+            Extract m = JsonConvert.DeserializeObject<Extract>(jsonString,
+                new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ" });
 
             Title = m.Title;
             Article = m.Article;
@@ -66,6 +69,7 @@ namespace Aylien.TextApi
             Author = m.Author;
             Feeds = m.Feeds;
             Videos = m.Videos;
+            PublishDate = m.PublishDate;
         }
     }
 }
