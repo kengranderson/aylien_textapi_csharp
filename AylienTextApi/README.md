@@ -3,7 +3,9 @@
 
 This is the C# client library for AYLIEN's APIs. If you haven't already done so, you will need to [sign up](https://developer.aylien.com/signup).
 
-## Frameworks supported
+Frameworks supported
+====================
+
 - .NET 4.0 or later
 
 Installation
