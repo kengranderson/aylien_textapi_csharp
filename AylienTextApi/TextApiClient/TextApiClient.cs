@@ -1,6 +1,6 @@
 ﻿﻿#region License
 /*
-Copyright 2015 Aylien, Inc. All Rights Reserved.
+Copyright 2016 Aylien, Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -272,6 +272,21 @@ namespace Aylien.TextApi
             Response r = imageTags.call(url);
             extractRateLimitParameters(r);
             return imageTags;
+        }
+
+        /// <summary>
+        /// Detects aspects and sentiment of a body of text.
+        /// </summary>
+        /// <param name="domain">Domain which document belongs to</param>
+        /// <param name="url">URL</param>
+        /// <param name="text">Text</param>
+        /// <returns>A <see cref="AspectBasedSentiment"/></returns>
+        public AspectBasedSentiment AspectBasedSentiment(string domain, string url = null, string text = null)
+        {
+            AspectBasedSentiment aspectBasedSentiment = new Aylien.TextApi.AspectBasedSentiment(configuration);
+            Response r = aspectBasedSentiment.call(domain, url, text);
+            extractRateLimitParameters(r);
+            return aspectBasedSentiment;
         }
 
         /// <summary>

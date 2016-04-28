@@ -7,7 +7,7 @@ namespace Aylien.TextApi.Tests
     [TestClass]
     public class UnitTestClient
     {
-        private string url, text, phrase, title, imageUrl, taxonomy;
+        private string url, text, phrase, title, imageUrl, taxonomy, domain;
         private Client client;
 
         private void setRequireVariables()
@@ -22,6 +22,7 @@ namespace Aylien.TextApi.Tests
             phrase = "Dublin";
             title = "Test title";
             taxonomy = "iab-qag";
+            domain = "airlines";
         }
 
         [TestMethod]
@@ -158,6 +159,15 @@ namespace Aylien.TextApi.Tests
             ClassifyByTaxonomy classifyByTaxonomy = client.ClassifyByTaxonomy(taxonomy, url: url);
 
             Assert.IsInstanceOfType(classifyByTaxonomy, typeof(ClassifyByTaxonomy));
+        }
+
+        [TestMethod]
+        public void ShouldReturnAnInstanceOfAspectBasedSentiment()
+        {
+            setRequireVariables();
+            AspectBasedSentiment aspectBasedSentiment = client.AspectBasedSentiment(domain, text: text);
+
+            Assert.IsInstanceOfType(aspectBasedSentiment, typeof(AspectBasedSentiment));
         }
 
         [TestMethod]

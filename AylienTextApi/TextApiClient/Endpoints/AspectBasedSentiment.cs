@@ -22,11 +22,11 @@ using System.Collections.Generic;
 
 namespace Aylien.TextApi
 {
-    public class ClassifyByTaxonomy : Base
+    public class AspectBasedSentiment : Base
     {
-        public ClassifyByTaxonomy(Configuration config) : base(config) { }
+        public AspectBasedSentiment(Configuration config) : base(config) { }
 
-        internal Response call(string taxonomy, string url, string text, string language)
+        internal Response call(string domain, string url, string text)
         {
             List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
@@ -36,13 +36,10 @@ namespace Aylien.TextApi
             if (!String.IsNullOrWhiteSpace(text))
                 parameters.Add(new Dictionary<string, string> { { "text", text } });
 
-            if (!String.IsNullOrWhiteSpace(language))
-                parameters.Add(new Dictionary<string, string> { { "language", language } });
+            if (String.IsNullOrEmpty(domain))
+                throw new Error("Invalid Domain. Domain can't be blank.");
 
-            if (String.IsNullOrEmpty(taxonomy))
-                throw new Error("Invalid taxonomy. Taxonomy can't be blank.");
-
-            var endpoint = Configuration.Endpoints["ClassifyByTaxonomy"].Replace(":taxonomy", taxonomy);
+            var endpoint = Configuration.Endpoints["AspectBasedSentiment"].Replace(":domain", domain);
             Connection connection = new Connection(endpoint, parameters, configuration);
             var response = connection.request();
             populateData(response.ResponseResult);
@@ -50,36 +47,43 @@ namespace Aylien.TextApi
             return response;
         }
 
-        public TaxonomicClassification[] Categories { get; set; }
         public string Text { get; set; }
-        public string Taxonomy { get; set; }
-        public string Language { get; set; }
+        public string Domain { get; set; }
+        public Aspect[] Aspects { get; set; }
+        public Sentence[] Sentences { get; set; }
 
         private void populateData(string jsonString)
         {
-            ClassifyByTaxonomy m = JsonConvert.DeserializeObject<ClassifyByTaxonomy>(jsonString);
+            AspectBasedSentiment m = JsonConvert.DeserializeObject<AspectBasedSentiment>(jsonString);
 
-            Categories = m.Categories;
             Text = m.Text;
-            Language = m.Language;
-            Taxonomy = m.Taxonomy;
+            Domain = m.Domain;
+            Aspects = m.Aspects;
+            Sentences = m.Sentences;
         }
     }
 
-    public class TaxonomicClassification
+    public class Aspect
     {
-        public string Id { get; set; }
-        public string Label { get; set; }
-        public float Score { get; set; }
-        public bool Confident { get; set; }
-        public Link[] Links { get; set; }
+        [JsonProperty("aspect")]
+        public string _Aspect { get; set; }
+
+        [JsonProperty("aspect_confidence")]
+        public double AspectConfidence { get; set; }
+
+        public string Polarity { get; set; }
+
+        [JsonProperty("polarity_confidence")]
+        public double PolarityConfidence { get; set; }
     }
 
-    public class Link
+    public class Sentence
     {
-        public string Rel { get; set; }
-        
-        [JsonProperty("link")]
-        public string Url { get; set; }
+        public string Text { get; set; }
+        public string Polarity { get; set; }
+
+        [JsonProperty("polarity_confidence")]
+        public double PolarityConfidence { get; set; }
+        public Aspect[] Aspects { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿﻿#region License
 /*
-Copyright 2015 Aylien, Inc. All Rights Reserved.
+Copyright 2016 Aylien, Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ namespace Aylien.TextApi
             {"Microformats", "microformats"},
             {"UnsupervisedClassify", "classify/unsupervised"},
             {"Combined", "combined"},
-            {"ImageTags", "image-tags"}
+            {"ImageTags", "image-tags"},
+            {"AspectBasedSentiment", "absa/:domain"}
         };
 
         internal static readonly Dictionary<string, string> Headers = new Dictionary<string, string>
@@ -48,7 +49,7 @@ namespace Aylien.TextApi
 
         private string defaultBaseUri = "https://api.aylien.com/api/v1/";
         private string defaultMethod = "POST";
-        private string defaultUserAgent = "Aylien Text API C# Lib";
+        private string defaultUserAgent = "Aylien Text API C# Lib 1.10.0.0";
 
         public Configuration(string appId, string appKey)
         {
