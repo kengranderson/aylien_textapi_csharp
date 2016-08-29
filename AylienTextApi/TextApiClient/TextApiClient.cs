@@ -126,11 +126,12 @@ namespace Aylien.TextApi
         /// <param name="text">Text</param>
         /// <param name="mode">Analyze mode. Valid options are
         ///  tweet, and document. Default is tweet.</param>
+        ///  <param name="language">Language</param>
         /// <returns>A <see cref="Sentiment"/></returns>
-        public Sentiment Sentiment(string url = null, string text = null, string mode = null)
+        public Sentiment Sentiment(string url = null, string text = null, string mode = null, string language = null)
         {
             Sentiment sentiment = new Aylien.TextApi.Sentiment(configuration);
-            Response r = sentiment.call(url, text, mode);
+            Response r = sentiment.call(url, text, mode, language);
             extractRateLimitParameters(r);
             return sentiment;
         }

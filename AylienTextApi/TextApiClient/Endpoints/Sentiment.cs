@@ -26,7 +26,7 @@ namespace Aylien.TextApi
     {
         public Sentiment(Configuration config) : base(config) { }
 
-        internal Response call(string url, string text, string mode)
+        internal Response call(string url, string text, string mode, string language)
         {
             List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
 
@@ -38,6 +38,9 @@ namespace Aylien.TextApi
 
             if (!String.IsNullOrWhiteSpace(mode))
                 parameters.Add(new Dictionary<string, string> { { "mode", mode } });
+
+            if (!String.IsNullOrWhiteSpace(language))
+                parameters.Add(new Dictionary<string, string> { { "language", language } });
 
             Connection connection = new Connection(Configuration.Endpoints["Sentiment"], parameters, configuration);
             var response = connection.request();
