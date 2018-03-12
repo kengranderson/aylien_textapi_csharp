@@ -70,7 +70,7 @@ namespace Aylien.TextApi
 
                 var postData = Parameters.Aggregate("",
                   (memo, pair) =>
-                     "&" + pair.First().Key + "=" + Uri.EscapeDataString(pair.First().Value) + memo
+                     "&" + pair.First().Key + "=" + EscapeDataString(pair.First().Value) + memo
                   ).Substring(1);
 
                 var data = Encoding.UTF8.GetBytes(postData);
@@ -88,7 +88,7 @@ namespace Aylien.TextApi
             {
                 var query = Parameters.Aggregate("",
                   (memo, pair) =>
-                     "&" + pair.First().Key + "=" + Uri.EscapeDataString(pair.First().Value) + memo
+                     "&" + pair.First().Key + "=" + EscapeDataString(pair.First().Value) + memo
                      );
 
                 if (query != null && query.Length > 2)
@@ -110,6 +110,33 @@ namespace Aylien.TextApi
             }
 
             Request = request;
+        }
+
+        /// <summary>
+        /// Improved EscapeDataString to replace Url.EscapeDataString, which has a 64K string limitation.
+        /// </summary>
+        /// <param name="stringToEscape"></param>
+        /// <returns></returns>
+        private string EscapeDataString(string stringToEscape) {
+            const int chunkSize = 32766;                // Ensure that this will work on any .Net platform, incl Store / portable
+            var originalSize = stringToEscape.Length;   // Save the original size to make it easier to allocate the StringBuilder at 10% larger to account for encoding.
+            var loops = originalSize / chunkSize;       // Number of chunkSize sized loops.
+
+            // Allocate the StringBuilder with some 'air' for encoded characters.
+            StringBuilder sb = new StringBuilder(originalSize + originalSize / 10);
+
+            // Iterate the string by chunkSize, and call the native .Net API for each safe-sized chunk.
+            for (int loop = 0; loop <= loops; loop++) {
+                if (loop < loops) {
+                    sb.Append(Uri.EscapeDataString(stringToEscape.Substring(chunkSize * loop, chunkSize)));
+                }
+                else {
+                    sb.Append(Uri.EscapeDataString(stringToEscape.Substring(chunkSize * loop)));
+                }
+            }
+
+            // Return the chunked and escaped string.
+            return sb.ToString();
         }
     }
 
