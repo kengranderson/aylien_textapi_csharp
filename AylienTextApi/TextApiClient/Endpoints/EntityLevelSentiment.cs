@@ -1,6 +1,6 @@
 ﻿﻿#region License
 /*
-Copyright 2014 Aylien, Inc. All Rights Reserved.
+Copyright 2018 Aylien, Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -78,9 +78,9 @@ namespace Aylien.TextApi
     }
 
     public class EntityLevelSentimentMention {
-	    public int Offset { set; get; }
-	    public float Confidence { set; get; }
-	    public string Text { set; get; }
-	    public EntityLevelSentimentOverallSentiment Sentiment { set; get; }
+	public int Offset { set; get; }
+	public float Confidence { set; get; }
+	public string Text { set; get; }
+	public EntityLevelSentimentOverallSentiment Sentiment { set; get; }
     }
 }
