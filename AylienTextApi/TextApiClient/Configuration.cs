@@ -31,11 +31,9 @@ namespace Aylien.TextApi
 	        {"Concepts", "concepts"},
 	        {"Sentiment", "sentiment"},
 	        {"Language", "language"},
-	        {"Related", "related"},
 	        {"Hashtags", "hashtags"},
 	        {"Entities", "entities"},
-            {"Microformats", "microformats"},
-            {"UnsupervisedClassify", "classify/unsupervised"},
+            {"Elsa", "elsa"},
             {"Combined", "combined"},
             {"ImageTags", "image-tags"},
             {"AspectBasedSentiment", "absa/:domain"}
