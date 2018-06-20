@@ -30,7 +30,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldThrowErrorWithUnauthenticatedClient()
         {
             Client invalidClient = new Client("WrongAppId", "WrongAppKey");
-            Sentiment sentiment = invalidClient.Sentiment(text: text);
+            Sentiment sentiment = invalidClient.Sentiment(text: "John is a bad football player");
         }
 
         [TestMethod]
@@ -88,15 +88,6 @@ namespace Aylien.TextApi.Tests
         }
 
         [TestMethod]
-        public void ShouldReturnAnInstanceOfRelated()
-        {
-            setRequireVariables();
-            Related related = client.Related(phrase: phrase);
-
-            Assert.IsInstanceOfType(related, typeof(Related));
-        }
-
-        [TestMethod]
         public void ShouldReturnAnInstanceOfSentiment()
         {
             setRequireVariables();
@@ -112,25 +103,6 @@ namespace Aylien.TextApi.Tests
             Summarize summarize = client.Summarize(text: text, title: title);
 
             Assert.IsInstanceOfType(summarize, typeof(Summarize));
-        }
-
-        [TestMethod]
-        public void ShouldReturnAnInstanceOfMicroformats()
-        {
-            setRequireVariables();
-            Microformats microformats = client.Microformats(url: url);
-
-            Assert.IsInstanceOfType(microformats, typeof(Microformats));
-        }
-
-        [TestMethod]
-        public void ShouldReturnAnInstanceOfUnsupervisedClassify()
-        {
-            setRequireVariables();
-            string[] classes = new string[] {"painting", "dancing"};
-            UnsupervisedClassify unsupervisedClassify = client.UnsupervisedClassify(url: url, classes: classes);
-
-            Assert.IsInstanceOfType(unsupervisedClassify, typeof(UnsupervisedClassify));
         }
 
         [TestMethod]
@@ -168,6 +140,15 @@ namespace Aylien.TextApi.Tests
             AspectBasedSentiment aspectBasedSentiment = client.AspectBasedSentiment(domain, text: text);
 
             Assert.IsInstanceOfType(aspectBasedSentiment, typeof(AspectBasedSentiment));
+        }
+
+        [TestMethod]
+        public void ShouldReturnAnInstanceOfElsa()
+        {
+            setRequireVariables();
+            EntityLevelSentiment elsa = client.EntityLevelSentiment(text: text);
+
+            Assert.IsInstanceOfType(elsa, typeof(EntityLevelSentiment));
         }
 
         [TestMethod]
