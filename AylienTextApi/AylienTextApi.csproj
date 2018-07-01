@@ -66,15 +66,13 @@
     <Compile Include="TextApiClient\Endpoints\Combined.cs" />
     <Compile Include="TextApiClient\Endpoints\Concepts.cs" />
     <Compile Include="TextApiClient\Endpoints\Entities.cs" />
+    <Compile Include="TextApiClient\Endpoints\EntityLevelSentiment.cs" />
     <Compile Include="TextApiClient\Endpoints\Extract.cs" />
     <Compile Include="TextApiClient\Endpoints\Hashtags.cs" />
     <Compile Include="TextApiClient\Endpoints\ImageTags.cs" />
     <Compile Include="TextApiClient\Endpoints\Language.cs" />
-    <Compile Include="TextApiClient\Endpoints\Microformats.cs" />
-    <Compile Include="TextApiClient\Endpoints\Related.cs" />
     <Compile Include="TextApiClient\Endpoints\Sentiment.cs" />
     <Compile Include="TextApiClient\Endpoints\Summarize.cs" />
-    <Compile Include="TextApiClient\Endpoints\UnsupervisedClassify.cs" />
     <Compile Include="TextApiClient\Error.cs" />
     <Compile Include="TextApiClient\TextApiClient.cs" />
   </ItemGroup>

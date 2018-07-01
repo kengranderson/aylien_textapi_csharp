@@ -204,50 +204,6 @@ namespace Aylien.TextApi
         }
 
         /// <summary>
-        /// Returns phrases related to the provided unigram, or bigram.
-        /// </summary>
-        /// <param name="phrase">Phrase</param>
-        /// <param name="count">Number of phrases to return.
-        ///  Default is 20. Max is 100.</param>
-        /// <returns>A <see cref="Related"/></returns>
-        public Related Related(string phrase = null, int count = 0)
-        {
-            Related related = new Aylien.TextApi.Related(configuration);
-            Response r = related.call(phrase, count.ToString());
-            extractRateLimitParameters(r);
-            return related;
-        }
-
-        /// <summary>
-        /// Returns Microformats.
-        /// </summary>
-        /// <param name="url">URL</param>
-        /// <returns>A <see cref="Microformats"/></returns>
-        public Microformats Microformats(string url)
-        {
-            Microformats microformats = new Aylien.TextApi.Microformats(configuration);
-            Response r = microformats.call(url);
-            extractRateLimitParameters(r);
-            return microformats;
-        }
-
-        /// <summary>
-        /// Returns Unsupervised Classfication.
-        /// </summary>
-        /// <param name="url">A valid URL</param>
-        /// <param name="text">Text</param>
-        /// <param name="classes">Classes</param>
-        /// <param name="numberOfConcepts">Number of Concepts</param>
-        /// <returns>A <see cref="UnsupervisedClassify"/></returns>
-        public UnsupervisedClassify UnsupervisedClassify(string url = null, string text = null, string[] classes = null, int numberOfConcepts = 0)
-        {
-            UnsupervisedClassify unsupervisedClassify = new Aylien.TextApi.UnsupervisedClassify(configuration);
-            Response r = unsupervisedClassify.call(url, text, classes, numberOfConcepts.ToString());
-            extractRateLimitParameters(r);
-            return unsupervisedClassify;
-        }
-
-        /// <summary>
         /// Runs multiple analysis operations in one API call.
         /// </summary>
         /// <param name="url">A valid URL</param>
@@ -288,6 +244,20 @@ namespace Aylien.TextApi
             Response r = aspectBasedSentiment.call(domain, url, text);
             extractRateLimitParameters(r);
             return aspectBasedSentiment;
+        }
+
+        /// <summary>
+        /// Returns the sentiment towards entities on given text
+        /// </summary>
+        /// <param name="url">A valid URL</param>
+        /// <param name="text">Text</param>
+        /// <returns>A <see cref="EntityLevelSentiment"/></returns>
+        public EntityLevelSentiment EntityLevelSentiment(string url = null, string text = null)
+        {
+            EntityLevelSentiment elsa = new Aylien.TextApi.EntityLevelSentiment(configuration);
+            Response r = elsa.call(url, text);
+            extractRateLimitParameters(r);
+            return elsa;
         }
 
         /// <summary>
