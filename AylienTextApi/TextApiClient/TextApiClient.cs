@@ -314,10 +314,22 @@ namespace Aylien.TextApi
         private void extractRateLimitParameters(Response r){
             RateLimit = new Dictionary<string, int>
             {
-                {"Limit", int.Parse(r.ResponseHeader["X-RateLimit-Limit"])},
-                {"Remaining", int.Parse(r.ResponseHeader["X-RateLimit-Remaining"])},
-                {"Reset", int.Parse(r.ResponseHeader["X-RateLimit-Reset"])}
+                {"Limit", SafeParse(r.ResponseHeader["X-RateLimit-Limit"], -1)},
+                {"Remaining", SafeParse(r.ResponseHeader["X-RateLimit-Remaining"], -1)},
+                {"Reset", SafeParse(r.ResponseHeader["X-RateLimit-Reset"], -1)}
             };
+        }
+
+        /// <summary>
+        /// Added this method because extractRateLimitParameters throws null exceptions 
+        /// when the API response does not include X-RateLimit headers.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        private int SafeParse(string value, int defaultValue) {
+            int.TryParse(value, out defaultValue);
+            return defaultValue;
         }
     }
 }
