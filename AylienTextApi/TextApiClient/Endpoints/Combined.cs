@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class Combined : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serilaization support.
+        /// </summary>
+        public Combined() { }
+
         public Combined(Configuration config) : base(config) { }
 
         internal Response call(string url, string text, string[] endpoints)

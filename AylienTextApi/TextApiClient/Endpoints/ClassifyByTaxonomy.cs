@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class ClassifyByTaxonomy : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serilaization support.
+        /// </summary>
+        public ClassifyByTaxonomy() : base() { }
+
         public ClassifyByTaxonomy(Configuration config) : base(config) { }
 
         internal Response call(string taxonomy, string url, string text, string language)

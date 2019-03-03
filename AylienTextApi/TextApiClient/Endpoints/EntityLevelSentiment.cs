@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class EntityLevelSentiment : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serilaization support.
+        /// </summary>
+        public EntityLevelSentiment() : base() { }
+
         public EntityLevelSentiment(Configuration config) : base(config) { }
 
         internal Response call(string url, string text)

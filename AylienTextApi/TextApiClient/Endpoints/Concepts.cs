@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class Concepts : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serilaization support.
+        /// </summary>
+        public Concepts() : base() { }
+
         public Concepts(Configuration config) : base(config) { }
 
         internal Response call(string url, string text, string language)

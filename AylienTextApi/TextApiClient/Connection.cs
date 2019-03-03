@@ -44,8 +44,8 @@ namespace Aylien.TextApi
             {
                 var response = (HttpWebResponse)Request.GetResponse();
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                response.Close();
                 Response returnResponse = new Response(responseString, response.Headers);
+                response.Close();
 
                 return returnResponse;
             }
@@ -57,16 +57,16 @@ namespace Aylien.TextApi
 
         private void compileRequestParams(Configuration configuration)
         {
-            HttpWebRequest request;
+            HttpWebRequest _request;
 
             if (configuration.Method == "POST")
             {
-                request = (HttpWebRequest)WebRequest.Create(RequestUri);
-                request.Method = configuration.Method;
+                _request = (HttpWebRequest)WebRequest.Create(RequestUri);
+                _request.Method = configuration.Method;
 
-                request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-                request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-                request.UserAgent = configuration.UserAgent;
+                _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+                _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+                _request.UserAgent = configuration.UserAgent;
 
                 var postData = Parameters.Aggregate("",
                   (memo, pair) =>
@@ -75,10 +75,10 @@ namespace Aylien.TextApi
 
                 var data = Encoding.UTF8.GetBytes(postData);
 
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = data.Length;
+                _request.ContentType = "application/x-www-form-urlencoded";
+                _request.ContentLength = data.Length;
 
-                using (var stream = request.GetRequestStream())
+                using (var stream = _request.GetRequestStream())
                 {
                     stream.Write(data, 0, data.Length);
                     stream.Close();
@@ -95,21 +95,21 @@ namespace Aylien.TextApi
                     query = query.Substring(1);
 
                 if (Parameters.Count > 0)
-                    request = (HttpWebRequest)WebRequest.Create(RequestUri + "?" + query);
+                    _request = (HttpWebRequest)WebRequest.Create(RequestUri + "?" + query);
                 else
-                    request = (HttpWebRequest)WebRequest.Create(RequestUri);
-                request.Method = configuration.Method;
+                    _request = (HttpWebRequest)WebRequest.Create(RequestUri);
+                _request.Method = configuration.Method;
 
-                request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-                request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-                request.UserAgent = configuration.UserAgent;
+                _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+                _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+                _request.UserAgent = configuration.UserAgent;
             }
             else
             {
                 throw new ArgumentException("Method should be GET or POST.");
             }
 
-            Request = request;
+            Request = _request;
         }
 
         /// <summary>
