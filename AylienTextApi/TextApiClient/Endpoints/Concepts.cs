@@ -25,7 +25,7 @@ namespace Aylien.TextApi
     public class Concepts : Base
     {
         /// <summary>
-        /// Default constructor added to provide better serilaization support.
+        /// Default constructor added to provide better serialization support.
         /// </summary>
         public Concepts() : base() { }
 
@@ -71,6 +71,8 @@ namespace Aylien.TextApi
         public SurfaceForm[] SurfaceForms { set; get; }
         public string[] Types { set; get; }
         public int Support { set; get; }
+
+        public override string ToString() => SurfaceForms?.Length > 0 ? SurfaceForms[0].ToString() : base.ToString();
     }
 
     public class SurfaceForm
@@ -78,5 +80,7 @@ namespace Aylien.TextApi
         public float Score { set; get; }
         public string String { set; get; }
         public int Offset { set; get; }
+
+        public override string ToString() => $"{String} [{Score}]";
     }
 }

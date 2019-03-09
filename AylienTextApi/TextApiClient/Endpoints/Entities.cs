@@ -25,7 +25,7 @@ namespace Aylien.TextApi
     public class Entities : Base
     {
         /// <summary>
-        /// Default constructor added to provide better serilaization support.
+        /// Default constructor added to provide better serialization support.
         /// </summary>
         public Entities() : base() { }
 

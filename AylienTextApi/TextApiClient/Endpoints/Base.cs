@@ -24,7 +24,7 @@ namespace Aylien.TextApi
         protected Configuration configuration;
 
         /// <summary>
-        /// Default constructor added to provide better serilaization support.
+        /// Default constructor added to provide better serialization support.
         /// </summary>
         protected Base() {
         }

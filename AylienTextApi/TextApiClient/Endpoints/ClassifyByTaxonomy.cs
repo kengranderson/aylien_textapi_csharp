@@ -25,7 +25,7 @@ namespace Aylien.TextApi
     public class ClassifyByTaxonomy : Base
     {
         /// <summary>
-        /// Default constructor added to provide better serilaization support.
+        /// Default constructor added to provide better serialization support.
         /// </summary>
         public ClassifyByTaxonomy() : base() { }
 
@@ -78,6 +78,8 @@ namespace Aylien.TextApi
         public float Score { get; set; }
         public bool Confident { get; set; }
         public Link[] Links { get; set; }
+
+        public override string ToString() => $"{Label} [{Score}]";
     }
 
     public class Link
@@ -86,5 +88,7 @@ namespace Aylien.TextApi
         
         [JsonProperty("link")]
         public string Url { get; set; }
+
+        public override string ToString() => $"{Rel}: {Url}";
     }
 }
