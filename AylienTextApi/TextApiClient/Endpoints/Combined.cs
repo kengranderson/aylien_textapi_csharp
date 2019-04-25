@@ -31,6 +31,11 @@ namespace Aylien.TextApi
 
         public Combined(Configuration config) : base(config) { }
 
+        public Combined(string serializedData)
+        {
+            populateData(serializedData);
+        }
+
         internal Response call(string url, string text, string[] endpoints)
         {
             List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
