@@ -7,6 +7,7 @@
     <Description>Bugfix fork of Alylien Text API, supporting .NET Standard 2.0.</Description>
     <Authors>Aylien, Ken Granderson</Authors>
     <Company>Aylien</Company>
+    <PackageId>AylienTextApiCore</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
