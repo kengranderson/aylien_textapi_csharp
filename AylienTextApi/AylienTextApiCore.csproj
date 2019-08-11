@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>2.0.0</Version>
-    <Description>Bugfix fork of Alylien Text API, supporting .NET Standard 2.0.</Description>
+    <Version>2.1.0</Version>
+    <Description>Bugfix fork of Aylien Text API, supporting .NET Standard 2.0.</Description>
     <Authors>Aylien, Ken Granderson</Authors>
     <Company>Aylien</Company>
     <PackageId>AylienTextApiCore</PackageId>
