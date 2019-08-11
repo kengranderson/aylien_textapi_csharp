@@ -30,5 +30,13 @@ namespace Aylien.TextApi
 
             return this;
         }
+
+        public ApiParameters AddNonPositiveInt(string key, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value) && int.Parse(value) > 0)
+                Add(new Dictionary<string, string> { { key, value } });
+
+            return this;
+        }
     }
 }

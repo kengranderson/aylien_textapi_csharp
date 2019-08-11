@@ -48,7 +48,7 @@ namespace Aylien.TextApi
 
         internal const string BaseUri = "https://api.aylien.com";
         internal const string BasePath = "/api/v1/";
-        internal const string defaultUserAgent = "Aylien Text API C# Lib 1.12.0.0";
+        internal const string defaultUserAgent = "Aylien Text API C# Lib 2.0.0 (.Net Standard)";
 
         public Configuration(string appId, string appKey)
         {

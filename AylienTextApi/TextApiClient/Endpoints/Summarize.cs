@@ -37,8 +37,8 @@ namespace Aylien.TextApi
             var parameters = new ApiParameters(url, text);
             parameters.Add("title", title).
                 Add("mode", mode).
-                Add("sentences_number", sentencesNumber).
-                Add("sentences_percentage", sentencesPercentage);
+                AddNonPositiveInt("sentences_number", sentencesNumber).
+                AddNonPositiveInt("sentences_percentage", sentencesPercentage);
 
             Connection connection = new Connection(Configuration.Endpoints["Summarize"], parameters, configuration);
             var response = await connection.requestAsync().ConfigureAwait(false);

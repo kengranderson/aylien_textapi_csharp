@@ -11,7 +11,7 @@ namespace Aylien.TextApi.Tests
     [TestClass]
     public class UnitTestClient
     {
-        private string url, text, phrase, title, imageUrl, taxonomy, domain;
+        private string url, text, phrase, title, imageUrl, taxonomy, domain, combinedtest;
         private Client client;
 
         private void setRequireVariables()
@@ -27,6 +27,7 @@ namespace Aylien.TextApi.Tests
             title = "Test title";
             taxonomy = "iab-qag";
             domain = "airlines";
+            combinedtest = "https://www.theguardian.com/books/2019/aug/11/toni-morrison-tributes-leading-writers-tracy-k-smith";
         }
 
         [TestMethod]
@@ -169,6 +170,25 @@ namespace Aylien.TextApi.Tests
             Assert.AreNotEqual(rateLimit["Limit"], -1);
             Assert.AreNotEqual(rateLimit["Remaining"], -1);
             Assert.AreNotEqual(rateLimit["Reset"], -1);
+        }
+
+        [TestMethod]
+        public void TestCombined()
+        {
+            setRequireVariables();
+
+            (Extract extract, Summarize summarize) = Task.Run(() => TestCombinedAsync(combinedtest)).Result;
+
+            Assert.IsNotNull(extract);
+            Assert.IsNotNull(summarize);
+        }
+
+        async Task<(Extract, Summarize)> TestCombinedAsync(string url)
+        {
+            Extract extract = await client.ExtractAsync(url: url, html: null, bestImage: true);
+            Summarize summarize = await client.SummarizeAsync(extract.Article, title: extract.Title ?? "No Title", url: null);
+
+            return (extract, summarize);
         }
     }
 }
