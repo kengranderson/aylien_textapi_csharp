@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -17,8 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -31,22 +30,16 @@ namespace Aylien.TextApi
 
         public AspectBasedSentiment(Configuration config) : base(config) { }
 
-        internal Response call(string domain, string url, string text)
+        internal async Task<Response> callAsync(string domain, string url, string text)
         {
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
+            var parameters = new ApiParameters(url, text);
 
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
-            if (!String.IsNullOrWhiteSpace(text))
-                parameters.Add(new Dictionary<string, string> { { "text", text } });
-
-            if (String.IsNullOrEmpty(domain))
+            if (string.IsNullOrEmpty(domain))
                 throw new Error("Invalid Domain. Domain can't be blank.");
 
             var endpoint = Configuration.Endpoints["AspectBasedSentiment"].Replace(":domain", domain);
             Connection connection = new Connection(endpoint, parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             populateData(response.ResponseResult);
 
             return response;

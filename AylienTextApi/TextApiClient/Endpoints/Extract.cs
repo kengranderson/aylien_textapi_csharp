@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -19,7 +19,7 @@ limitations under the License.
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -32,36 +32,27 @@ namespace Aylien.TextApi
 
         public Extract(Configuration config) : base(config) { }
 
-        internal Response call(string url, string html, string bestImage, string keepHtmlFormatting)
+        internal async Task<Response> callAsync(string url, string html, string bestImage, string keepHtmlFormatting)
         {
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
-
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
-            if (!String.IsNullOrWhiteSpace(html))
-                parameters.Add(new Dictionary<string, string> { { "html", html } });
-            
-            if (!String.IsNullOrWhiteSpace(bestImage))
-                parameters.Add(new Dictionary<string, string> { { "best_image", bestImage } });
-
-            if (!String.IsNullOrWhiteSpace(keepHtmlFormatting))
-                parameters.Add(new Dictionary<string, string> { { "keep_html_formatting", keepHtmlFormatting } });
+            var parameters = new ApiParameters(url).
+                Add("html", html).
+                Add("best_image", bestImage).
+                Add("keep_html_formatting", keepHtmlFormatting);
 
             Connection connection = new Connection(Configuration.Endpoints["Extract"], parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             populateData(response.ResponseResult);
 
             return response;
         }
 
-        public string Title { get; set;}
-        public string Article { get; set;}
-        public string Image { get; set;}
-        public string Author { get; set;}
+        public string Title { get; set; }
+        public string Article { get; set; }
+        public string Image { get; set; }
+        public string Author { get; set; }
         public DateTime? PublishDate { get; set; }
-        public string[] Videos { get; set;}
-        public string[] Feeds { get; set;}
+        public string[] Videos { get; set; }
+        public string[] Feeds { get; set; }
 
         void populateData(string jsonString)
         {

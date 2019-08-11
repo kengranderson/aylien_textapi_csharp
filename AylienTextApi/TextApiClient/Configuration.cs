@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Aylien.TextApi
 {
@@ -45,28 +46,20 @@ namespace Aylien.TextApi
             {"AppId", "X-AYLIEN-TextAPI-Application-ID"}
         };
 
-        private readonly string defaultBaseUri = "https://api.aylien.com/api/v1/";
-        private readonly string defaultMethod = "POST";
-        private readonly string defaultUserAgent = "Aylien Text API C# Lib 1.12.0.0";
+        internal const string BaseUri = "https://api.aylien.com";
+        internal const string BasePath = "/api/v1/";
+        internal const string defaultUserAgent = "Aylien Text API C# Lib 1.12.0.0";
 
         public Configuration(string appId, string appKey)
         {
-            this.AppId = appId;
-            this.AppKey = appKey;
+            AppId = appId;
+            AppKey = appKey;
         }
 
         internal string AppId { get; set;}
         internal string AppKey { get; set;}
 
-        internal string BaseUri
-        {
-            get { return defaultBaseUri; }
-        }
-
-        internal string Method
-        {
-            get { return defaultMethod; }
-        }
+        internal HttpMethod Method { get; } = HttpMethod.Post;
 
         internal string UserAgent
         {

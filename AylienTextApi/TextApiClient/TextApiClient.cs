@@ -17,6 +17,8 @@ limitations under the License.
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -25,10 +27,12 @@ namespace Aylien.TextApi
     /// </summary>
     public class Client
     {
-        private readonly Configuration configuration;
-        private Dictionary<string, int> rateLimit = new Dictionary<string, int>
+        readonly Configuration configuration;
+        Dictionary<string, int> rateLimit = new Dictionary<string, int>
         {
-            {"Limit", -1}, {"Remaining", -1}, {"Reset", -1}
+            {"Limit", -1},
+            { "Remaining", -1},
+            { "Reset", -1}
         };
 
         /// <summary>
@@ -48,11 +52,11 @@ namespace Aylien.TextApi
         /// <param name="url">A valid URL</param>
         /// <param name="html">HTML as string</param>
         /// <param name="bestImage">Whether extract the best image of the article</param>
-        /// <returns>A <see cref="Extract"/></returns>
-        public Extract Extract(string url = null, string html = null, bool bestImage = false, bool keepHtmlFormatting = false)
+        /// <returns>A <see cref="ExtractAsync"/></returns>
+        public async Task<Extract> ExtractAsync(string url = null, string html = null, bool bestImage = false, bool keepHtmlFormatting = false)
         {
-            Extract extract = new Aylien.TextApi.Extract(configuration);
-            Response r = extract.call(url, html, bestImage.ToString(), keepHtmlFormatting.ToString());
+            var extract = new Extract(configuration);
+            var r = await extract.callAsync(url, html, bestImage.ToString(), keepHtmlFormatting.ToString()).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return extract;
         }
@@ -73,11 +77,11 @@ namespace Aylien.TextApi
         ///   Only in default mode (not applicable to short mode).
         ///   Possible range is 1-100.
         ///   sentencesNumber has precedence over this parameter.</param>
-        /// <returns>A <see cref="Summarize"/></returns>
-        public Summarize Summarize(string text = null, string title = null, string url = null, string mode = null, int sentencesNumber = 0, int sentencesPercentage = 0)
+        /// <returns>A <see cref="SummarizeAsync"/></returns>
+        public async Task<Summarize> SummarizeAsync(string text = null, string title = null, string url = null, string mode = null, int sentencesNumber = 0, int sentencesPercentage = 0)
         {
-            Summarize summarize = new Aylien.TextApi.Summarize(configuration);
-            Response r = summarize.call(text, title, url, mode, sentencesNumber.ToString(), sentencesPercentage.ToString());
+            var summarize = new Summarize(configuration);
+            var r = await summarize.callAsync(text, title, url, mode, sentencesNumber.ToString(), sentencesPercentage.ToString()).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return summarize;
         }
@@ -90,11 +94,11 @@ namespace Aylien.TextApi
         /// <param name="language">Language of text. Valid options are
         ///  en, de, fr, es, it, pt, and auto. If set to auto, it'll try to
         ///  detect the language. Default is en.</param>
-        /// <returns>A <see cref="Classify"/></returns>
-        public Classify Classify(string url = null, string text = null, string language = null)
+        /// <returns>A <see cref="ClassifyAsync"/></returns>
+        public async Task<Classify> ClassifyAsync(string url = null, string text = null, string language = null)
         {
-            Classify classify = new Aylien.TextApi.Classify(configuration);
-            Response r = classify.call(url, text, language);
+            var classify = new Classify(configuration);
+            var r = await classify.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return classify;
         }
@@ -108,11 +112,11 @@ namespace Aylien.TextApi
         /// <param name="language">Language of text. Valid options are
         ///  en, de, fr, es, it, pt, and auto. If set to auto, it'll try to
         ///  detect the language. Default is en.</param>
-        /// <returns>A <see cref="Classify"/></returns>
-        public ClassifyByTaxonomy ClassifyByTaxonomy(string taxonomy, string url = null, string text = null, string language = null)
+        /// <returns>A <see cref="ClassifyAsync"/></returns>
+        public async Task<ClassifyByTaxonomy> ClassifyByTaxonomyAsync(string taxonomy, string url = null, string text = null, string language = null)
         {
-            ClassifyByTaxonomy classify = new Aylien.TextApi.ClassifyByTaxonomy(configuration);
-            Response r = classify.call(taxonomy, url, text, language);
+            var classify = new ClassifyByTaxonomy(configuration);
+            var r = await classify.callAsync(taxonomy, url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return classify;
         }
@@ -127,11 +131,11 @@ namespace Aylien.TextApi
         /// <param name="mode">Analyze mode. Valid options are
         ///  tweet, and document. Default is tweet.</param>
         ///  <param name="language">Language</param>
-        /// <returns>A <see cref="Sentiment"/></returns>
-        public Sentiment Sentiment(string url = null, string text = null, string mode = null, string language = null)
+        /// <returns>A <see cref="SentimentAsync"/></returns>
+        public async Task<Sentiment> SentimentAsync(string url = null, string text = null, string mode = null, string language = null)
         {
-            Sentiment sentiment = new Aylien.TextApi.Sentiment(configuration);
-            Response r = sentiment.call(url, text, mode, language);
+            var sentiment = new Sentiment(configuration);
+            var r = await sentiment.callAsync(url, text, mode, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return sentiment;
         }
@@ -143,11 +147,11 @@ namespace Aylien.TextApi
         /// </summary>
         /// <param name="url">A valid URL</param>
         /// <param name="text">Text</param>
-        /// <returns>A <see cref="Entities"/></returns>
-        public Entities Entities(string url = null, string text = null)
+        /// <returns>A <see cref="EntitiesAsync"/></returns>
+        public async Task<Entities> EntitiesAsync(string url = null, string text = null)
         {
-            Entities entities = new Aylien.TextApi.Entities(configuration);
-            Response r = entities.call(url, text);
+            var entities = new Entities(configuration);
+            var r = await entities.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return entities;
         }
@@ -162,11 +166,11 @@ namespace Aylien.TextApi
         /// <param name="language">Language of text. Valid options are
         /// en, de, fr, es, it, pt, and auto. If set to auto, it'll try to
         /// detect the language. Default is en.</param>
-        /// <returns>A <see cref="Concepts"/></returns>
-        public Concepts Concepts(string url = null, string text = null, string language = null)
+        /// <returns>A <see cref="ConceptsAsync"/></returns>
+        public async Task<Concepts> ConceptsAsync(string url = null, string text = null, string language = null)
         {
-            Concepts concepts = new Aylien.TextApi.Concepts(configuration);
-            Response r = concepts.call(url, text, language);
+            var concepts = new Concepts(configuration);
+            var r = await concepts.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return concepts;
         }
@@ -179,11 +183,11 @@ namespace Aylien.TextApi
         /// <param name="language">Language of text. Valid options are
         ///  en, de, fr, es, it, pt, and auto. If set to auto, it'll try to
         ///  detect the language. Default is en.</param>
-        /// <returns>A <see cref="Hashtags"/></returns>
-        public Hashtags Hashtags(string url = null, string text = null, string language = null)
+        /// <returns>A <see cref="HashtagsAsync"/></returns>
+        public async Task<Hashtags> HashtagsAsync(string url = null, string text = null, string language = null)
         {
-            Hashtags hashtags = new Aylien.TextApi.Hashtags(configuration);
-            Response r = hashtags.call(url, text, language);
+            var hashtags = new Hashtags(configuration);
+            var r = await hashtags.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return hashtags;
         }
@@ -194,11 +198,11 @@ namespace Aylien.TextApi
         /// </summary>
         /// <param name="url">A valid URL</param>
         /// <param name="text">Text</param>
-        /// <returns>A <see cref="Language"/></returns>
-        public Language Language(string url = null, string text = null)
+        /// <returns>A <see cref="LanguageAsync"/></returns>
+        public async Task<Language> LanguageAsync(string url = null, string text = null)
         {
-            Language language = new Aylien.TextApi.Language(configuration);
-            Response r = language.call(url, text);
+            var language = new Language(configuration);
+            var r = await language.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return language;
         }
@@ -209,11 +213,11 @@ namespace Aylien.TextApi
         /// <param name="url">A valid URL</param>
         /// <param name="text">Text</param>
         /// <param name="endpoints">List of operations</param>
-        /// <returns>A <see cref="Combined"/></returns>
-        public Combined Combined(string url = null, string text = null, string[] endpoints = null)
+        /// <returns>A <see cref="CombinedAsync"/></returns>
+        public async Task<Combined> CombinedAsync(string url = null, string text = null, string[] endpoints = null)
         {
-            Combined combined = new Aylien.TextApi.Combined(configuration);
-            Response r = combined.call(url, text, endpoints);
+            var combined = new Combined(configuration);
+            var r = await combined.callAsync(url, text, endpoints).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return combined;
         }
@@ -222,11 +226,11 @@ namespace Aylien.TextApi
         /// Assigns relevant tags to an image.
         /// </summary>
         /// <param name="url">URL</param>
-        /// <returns>A <see cref="ImageTags"/></returns>
-        public ImageTags ImageTags(string url)
+        /// <returns>A <see cref="ImageTagsAsync"/></returns>
+        public async Task<ImageTags> ImageTagsAsync(string url)
         {
-            ImageTags imageTags = new Aylien.TextApi.ImageTags(configuration);
-            Response r = imageTags.call(url);
+            var imageTags = new ImageTags(configuration);
+            var r = await imageTags.callAsync(url).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return imageTags;
         }
@@ -237,11 +241,11 @@ namespace Aylien.TextApi
         /// <param name="domain">Domain which document belongs to</param>
         /// <param name="url">URL</param>
         /// <param name="text">Text</param>
-        /// <returns>A <see cref="AspectBasedSentiment"/></returns>
-        public AspectBasedSentiment AspectBasedSentiment(string domain, string url = null, string text = null)
+        /// <returns>A <see cref="AspectBasedSentimentAsync"/></returns>
+        public async Task<AspectBasedSentiment> AspectBasedSentimentAsync(string domain, string url = null, string text = null)
         {
-            AspectBasedSentiment aspectBasedSentiment = new Aylien.TextApi.AspectBasedSentiment(configuration);
-            Response r = aspectBasedSentiment.call(domain, url, text);
+            var aspectBasedSentiment = new AspectBasedSentiment(configuration);
+            var r = await aspectBasedSentiment.callAsync(domain, url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return aspectBasedSentiment;
         }
@@ -251,11 +255,11 @@ namespace Aylien.TextApi
         /// </summary>
         /// <param name="url">A valid URL</param>
         /// <param name="text">Text</param>
-        /// <returns>A <see cref="EntityLevelSentiment"/></returns>
-        public EntityLevelSentiment EntityLevelSentiment(string url = null, string text = null)
+        /// <returns>A <see cref="EntityLevelSentimentAsync"/></returns>
+        public async Task<EntityLevelSentiment> EntityLevelSentimentAsync(string url = null, string text = null)
         {
-            EntityLevelSentiment elsa = new Aylien.TextApi.EntityLevelSentiment(configuration);
-            Response r = elsa.call(url, text);
+            var elsa = new EntityLevelSentiment(configuration);
+            var r = await elsa.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
             return elsa;
         }
@@ -270,7 +274,8 @@ namespace Aylien.TextApi
             {
                 if (rateLimit["Limit"] == -1 && rateLimit["Remaining"] == -1 && rateLimit["Reset"] == -1)
                 {
-                    Response r = new Aylien.TextApi.Language(configuration).call(null, "Test");
+                    var lang = new Language(configuration);
+                    var r = Task.Run(() => lang.callAsync(null, "Test")).Result;
                     extractRateLimitParameters(r);
                 }
                 return rateLimit;
@@ -281,12 +286,12 @@ namespace Aylien.TextApi
             }
         }
 
-        private void extractRateLimitParameters(Response r){
+        void extractRateLimitParameters(Response r) {
             RateLimit = new Dictionary<string, int>
             {
-                {"Limit", SafeParse(r.ResponseHeader["X-RateLimit-Limit"], -1)},
-                {"Remaining", SafeParse(r.ResponseHeader["X-RateLimit-Remaining"], -1)},
-                {"Reset", SafeParse(r.ResponseHeader["X-RateLimit-Reset"], -1)}
+                {"Limit", SafeParse(r, "X-RateLimit-Limit", -1)},
+                {"Remaining", SafeParse(r, "X-RateLimit-Remaining", -1)},
+                {"Reset", SafeParse(r, "X-RateLimit-Reset", -1)}
             };
         }
 
@@ -297,8 +302,8 @@ namespace Aylien.TextApi
         /// <param name="value"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        private int SafeParse(string value, int defaultValue) {
-            int.TryParse(value, out defaultValue);
+        int SafeParse(Response r, string key, int defaultValue) {
+            int.TryParse(r.ResponseHeader.GetValues(key).FirstOrDefault(), out defaultValue);
             return defaultValue;
         }
     }

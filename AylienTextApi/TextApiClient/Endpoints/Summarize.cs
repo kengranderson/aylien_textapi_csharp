@@ -19,6 +19,7 @@ limitations under the License.
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -31,30 +32,16 @@ namespace Aylien.TextApi
 
         public Summarize(Configuration config) : base(config) { }
 
-        internal Response call(string text, string title, string url, string mode, string sentencesNumber, string sentencesPercentage)
+        internal async Task<Response> callAsync(string text, string title, string url, string mode, string sentencesNumber, string sentencesPercentage)
         {
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
-
-            if (!String.IsNullOrWhiteSpace(text))
-                parameters.Add(new Dictionary<string, string> { { "text", text } });
-
-            if (!String.IsNullOrWhiteSpace(title))
-                parameters.Add(new Dictionary<string, string> { { "title", title } });
-
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
-            if (!String.IsNullOrWhiteSpace(mode))
-                parameters.Add(new Dictionary<string, string> { { "mode", mode } });
-
-            if (!String.IsNullOrWhiteSpace(sentencesNumber) && sentencesNumber != "0")
-                parameters.Add(new Dictionary<string, string> { { "sentences_number", sentencesNumber } });
-
-            if (!String.IsNullOrWhiteSpace(sentencesPercentage) && sentencesPercentage != "0")
-                parameters.Add(new Dictionary<string, string> { { "sentences_percentage", sentencesPercentage } });
+            var parameters = new ApiParameters(url, text);
+            parameters.Add("title", title).
+                Add("mode", mode).
+                Add("sentences_number", sentencesNumber).
+                Add("sentences_percentage", sentencesPercentage);
 
             Connection connection = new Connection(Configuration.Endpoints["Summarize"], parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             populateData(response.ResponseResult);
 
             return response;

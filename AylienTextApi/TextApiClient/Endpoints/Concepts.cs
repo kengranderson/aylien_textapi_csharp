@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -17,8 +17,8 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -31,21 +31,11 @@ namespace Aylien.TextApi
 
         public Concepts(Configuration config) : base(config) { }
 
-        internal Response call(string url, string text, string language)
+        internal async Task<Response> callAsync(string url, string text, string language)
         {
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
-
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
-            if (!String.IsNullOrWhiteSpace(text))
-                parameters.Add(new Dictionary<string, string> { { "text", text } });
-
-            if (!String.IsNullOrWhiteSpace(language))
-                parameters.Add(new Dictionary<string, string> { { "language", language } });
-
+            var parameters = new ApiParameters(url, text, language);
             Connection connection = new Connection(Configuration.Endpoints["Concepts"], parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             populateData(response.ResponseResult);
 
             return response;

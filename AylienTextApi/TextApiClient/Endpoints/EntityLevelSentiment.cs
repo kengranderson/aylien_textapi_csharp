@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2018 Aylien, Inc. All Rights Reserved.
 
@@ -17,8 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -31,19 +30,12 @@ namespace Aylien.TextApi
 
         public EntityLevelSentiment(Configuration config) : base(config) { }
 
-        internal Response call(string url, string text)
+        internal async Task<Response> callAsync(string url, string text)
         {
 
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
-
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
-            if (!String.IsNullOrWhiteSpace(text))
-                parameters.Add(new Dictionary<string, string> { { "text", text } });
-
+            var parameters = new ApiParameters(url, text);
             Connection connection = new Connection(Configuration.Endpoints["Elsa"], parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             populateData(response.ResponseResult);
 
             return response;

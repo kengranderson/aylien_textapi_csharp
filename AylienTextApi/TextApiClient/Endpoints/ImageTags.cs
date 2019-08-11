@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -17,8 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -31,15 +30,11 @@ namespace Aylien.TextApi
 
         public ImageTags(Configuration config) : base(config) { }
 
-        internal Response call(string url)
+        internal async Task<Response> callAsync(string url)
         {
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
-
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
+            var parameters = new ApiParameters(url);
             Connection connection = new Connection(Configuration.Endpoints["ImageTags"], parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             populateData(response.ResponseResult);
 
             return response;

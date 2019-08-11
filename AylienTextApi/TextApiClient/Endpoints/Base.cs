@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -17,6 +17,8 @@ limitations under the License.
 #endregion
 
 
+using System.Collections.Generic;
+
 namespace Aylien.TextApi
 {
     public class Base
@@ -33,5 +35,11 @@ namespace Aylien.TextApi
         {
             configuration = config;
         }
+
+        //protected void AddUrl(List<Dictionary<string, string>> dict, string key, string value)
+        //{
+        //    if (!string.IsNullOrWhiteSpace(value))
+        //        dict.Add(new Dictionary<string, string> { { key, value } });
+        //}
     }
 }

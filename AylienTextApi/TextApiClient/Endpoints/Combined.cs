@@ -19,6 +19,7 @@ limitations under the License.
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
@@ -36,23 +37,17 @@ namespace Aylien.TextApi
             populateData(serializedData);
         }
 
-        internal Response call(string url, string text, string[] endpoints)
+        internal async Task<Response> callAsync(string url, string text, string[] endpoints)
         {
-            List<Dictionary<string, string>> parameters = new List<Dictionary<string, string>>();
-
-            if (!String.IsNullOrWhiteSpace(url))
-                parameters.Add(new Dictionary<string, string> { { "url", url } });
-
-            if (!String.IsNullOrWhiteSpace(text))
-                parameters.Add(new Dictionary<string, string> { { "text", text } });
+            var parameters = new ApiParameters(url, text);
 
             foreach (string endpoint in endpoints)
             {
-                parameters.Add(new Dictionary<string, string> { { "endpoint", endpoint } });
+                parameters.Add("endpoint", endpoint);
             }
 
             Connection connection = new Connection(Configuration.Endpoints["Combined"], parameters, configuration);
-            var response = connection.request();
+            var response = await connection.requestAsync().ConfigureAwait(false);
             rawResponse = response.ResponseResult;
             populateData(rawResponse);
 

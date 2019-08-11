@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -17,35 +17,53 @@ limitations under the License.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi
 {
     class Connection
     {
-        private List<Dictionary<string, string>> Parameters { get; set; }
-        private HttpWebRequest Request { set; get; }
-        private string RequestUri { set; get; }
+        static readonly HttpClient client;
+        HttpRequestMessage Request;
 
-        public Connection(string endpoint, List<Dictionary<string, string>> parameters, Configuration configuration)
+        static Connection()
         {
-            RequestUri = configuration.BaseUri + endpoint;
+            client = new HttpClient
+            {
+                BaseAddress = new Uri(Configuration.BaseUri)
+            };
+
+            client.DefaultRequestHeaders.ConnectionClose = false;
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(Configuration.defaultUserAgent);
+        }
+
+        ApiParameters Parameters { get; set; }
+        string RequestUri { set; get; }
+
+        public Connection(string endpoint, ApiParameters parameters, Configuration configuration)
+        {
+            RequestUri = Configuration.BasePath + endpoint;
             Parameters = parameters;
             compileRequestParams(configuration);
         }
 
-        internal Response request()
+        internal async Task<Response> requestAsync()
         {
             try
             {
-                var response = (HttpWebResponse)Request.GetResponse();
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                var response = await client.SendAsync(Request).ConfigureAwait(false);
+                Request.Dispose();
+                Request = null;
+
+                var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 Response returnResponse = new Response(responseString, response.Headers);
-                response.Close();
+                response.Content.Dispose();
+                response.Dispose();
 
                 return returnResponse;
             }
@@ -55,36 +73,31 @@ namespace Aylien.TextApi
             }
         }
 
-        private void compileRequestParams(Configuration configuration)
+        void compileRequestParams(Configuration configuration)
         {
-            HttpWebRequest _request;
+            var url = GetUrl(configuration);
+            var _request = new HttpRequestMessage(configuration.Method, url);
 
-            if (configuration.Method == "POST")
+            _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+            _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+
+            if (configuration.Method == HttpMethod.Post)
             {
-                _request = (HttpWebRequest)WebRequest.Create(RequestUri);
-                _request.Method = configuration.Method;
-
-                _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-                _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-                _request.UserAgent = configuration.UserAgent;
-
                 var postData = Parameters.Aggregate("",
                   (memo, pair) =>
                      "&" + pair.First().Key + "=" + EscapeDataString(pair.First().Value) + memo
                   ).Substring(1);
 
-                var data = Encoding.UTF8.GetBytes(postData);
-
-                _request.ContentType = "application/x-www-form-urlencoded";
-                _request.ContentLength = data.Length;
-
-                using (var stream = _request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                    stream.Close();
-                }
+                var content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
+                _request.Content = content;
             }
-            else if (configuration.Method == "GET")
+
+            Request = _request;
+        }
+
+        string GetUrl(Configuration configuration)
+        {
+            if (configuration.Method == HttpMethod.Get)
             {
                 var query = Parameters.Aggregate("",
                   (memo, pair) =>
@@ -92,24 +105,14 @@ namespace Aylien.TextApi
                      );
 
                 if (query != null && query.Length > 2)
+                {
                     query = query.Substring(1);
+                }
 
-                if (Parameters.Count > 0)
-                    _request = (HttpWebRequest)WebRequest.Create(RequestUri + "?" + query);
-                else
-                    _request = (HttpWebRequest)WebRequest.Create(RequestUri);
-                _request.Method = configuration.Method;
-
-                _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-                _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-                _request.UserAgent = configuration.UserAgent;
-            }
-            else
-            {
-                throw new ArgumentException("Method should be GET or POST.");
+                return RequestUri + (Parameters.Count > 0 ? "?" + query : string.Empty);
             }
 
-            Request = _request;
+            return RequestUri;
         }
 
         /// <summary>
@@ -117,7 +120,7 @@ namespace Aylien.TextApi
         /// </summary>
         /// <param name="stringToEscape"></param>
         /// <returns></returns>
-        private string EscapeDataString(string stringToEscape) {
+        string EscapeDataString(string stringToEscape) {
             const int chunkSize = 32766;                // Ensure that this will work on any .Net platform, incl Store / portable
             var originalSize = stringToEscape.Length;   // Save the original size to make it easier to allocate the StringBuilder at 10% larger to account for encoding.
             var loops = originalSize / chunkSize;       // Number of chunkSize sized loops.
@@ -142,13 +145,13 @@ namespace Aylien.TextApi
 
     class Response
     {
-        public Response(string responseString, WebHeaderCollection headers)
+        public Response(string responseString, HttpResponseHeaders headers)
         {
             ResponseResult = responseString;
             ResponseHeader = headers;
         }
 
         internal string ResponseResult { get; set; }
-        internal WebHeaderCollection ResponseHeader { get; set; }
+        internal HttpResponseHeaders ResponseHeader { get; set; }
     }
 }
