@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Aylien.TextApi
@@ -27,35 +28,45 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string url, string text, string mode, string language)
         {
-            var parameters = new ApiParameters(url, text, language).
+            try
+            {
+                Exception = null;
+
+                var parameters = new ApiParameters(url, text, language).
                 Add("mode", mode);
 
-            Connection connection = new Connection(Configuration.Endpoints["Sentiment"], parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+                Connection connection = new Connection(Configuration.Endpoints["Sentiment"], parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
 
-            return response;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
-        public string Text { get; set; }
+    public string Text { get; set; }
         public string Subjectivity { get; set; }
 
         [JsonProperty("subjectivity_confidence")]
-        public double SubjectivityConfidence { get; set; }
+        public double? SubjectivityConfidence { get; set; }
         public string Polarity { get; set; }
 
         [JsonProperty("polarity_confidence")]
-        public double PolarityConfidence { get; set; }
+        public double? PolarityConfidence { get; set; }
 
         private void populateData(string jsonString)
         {
             Sentiment m = JsonConvert.DeserializeObject<Sentiment>(jsonString);
 
-            Text = m.Text;
-            Subjectivity = m.Subjectivity;
-            SubjectivityConfidence = m.SubjectivityConfidence;
-            Polarity = m.Polarity;
-            PolarityConfidence = m.PolarityConfidence;
+            Text = m?.Text;
+            Subjectivity = m?.Subjectivity;
+            SubjectivityConfidence = m?.SubjectivityConfidence;
+            Polarity = m?.Polarity;
+            PolarityConfidence = m?.PolarityConfidence;
         }
     }
 }

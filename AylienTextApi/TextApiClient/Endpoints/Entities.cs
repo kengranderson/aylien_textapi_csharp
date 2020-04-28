@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Aylien.TextApi
@@ -32,14 +33,24 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string url, string text)
         {
-            var parameters = new ApiParameters(url, text);
-            Connection connection = new Connection(Configuration.Endpoints["Entities"], parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+            try
+            {
+                Exception = null;
 
-            return response;
+                var parameters = new ApiParameters(url, text);
+                Connection connection = new Connection(Configuration.Endpoints["Entities"], parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
-        
+
         [JsonProperty("entities")]
         public Entity EntitiesMember { get; set; }
         public string Text { get; set; }
@@ -48,8 +59,8 @@ namespace Aylien.TextApi
         {
             Entities m = JsonConvert.DeserializeObject<Entities>(jsonString);
 
-            Text = m.Text;
-            EntitiesMember = m.EntitiesMember;
+            Text = m?.Text;
+            EntitiesMember = m?.EntitiesMember;
         }
     }
 

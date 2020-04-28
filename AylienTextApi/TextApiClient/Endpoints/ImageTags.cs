@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Aylien.TextApi
@@ -32,12 +33,22 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string url)
         {
-            var parameters = new ApiParameters(url);
-            Connection connection = new Connection(Configuration.Endpoints["ImageTags"], parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+            try
+            {
+                Exception = null;
 
-            return response;
+                var parameters = new ApiParameters(url);
+                Connection connection = new Connection(Configuration.Endpoints["ImageTags"], parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
         public Tag[] Tags { get; set; }
@@ -47,8 +58,8 @@ namespace Aylien.TextApi
         {
             ImageTags m = JsonConvert.DeserializeObject<ImageTags>(jsonString);
 
-            Tags = m.Tags;
-            Image = m.Image;
+            Tags = m?.Tags;
+            Image = m?.Image;
         }
     }
 

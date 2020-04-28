@@ -39,19 +39,29 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string url, string text, string[] endpoints)
         {
-            var parameters = new ApiParameters(url, text);
-
-            foreach (string endpoint in endpoints)
+            try
             {
-                parameters.Add("endpoint", endpoint);
+                Exception = null;
+
+                var parameters = new ApiParameters(url, text);
+
+                foreach (string endpoint in endpoints)
+                {
+                    parameters.Add("endpoint", endpoint);
+                }
+
+                Connection connection = new Connection(Configuration.Endpoints["Combined"], parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                rawResponse = response.ResponseResult;
+                populateData(rawResponse);
+
+                return response;
             }
-
-            Connection connection = new Connection(Configuration.Endpoints["Combined"], parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            rawResponse = response.ResponseResult;
-            populateData(rawResponse);
-
-            return response;
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
         string rawResponse;
@@ -74,57 +84,60 @@ namespace Aylien.TextApi
         {
             Combined m = JsonConvert.DeserializeObject<Combined>(jsonString);
 
-            Text = m.Text;
-            Results = m.Results;
+            Text = m?.Text;
+            Results = m?.Results;
 
-            foreach (var item in m.Results)
-            {
-                switch (item.Endpoint)
+            if (Results != null)
+            { 
+                foreach (var item in Results)
                 {
-                    case "classify/iab-qag":
-                    case "iptc-subjectcode":
-                        ClassifyByTaxonomy = JsonConvert.DeserializeObject<ClassifyByTaxonomy>(item.Result.ToString());
-                        ClassifyByTaxonomy.Text = Text;
-                        break;
+                    switch (item.Endpoint)
+                    {
+                        case "classify/iab-qag":
+                        case "iptc-subjectcode":
+                            ClassifyByTaxonomy = JsonConvert.DeserializeObject<ClassifyByTaxonomy>(item.Result.ToString());
+                            ClassifyByTaxonomy.Text = Text;
+                            break;
 
-                    case "classify":
-                        Classify = JsonConvert.DeserializeObject<Classify>(item.Result.ToString());
-                        Classify.Text = Text;
-                        break;
+                        case "classify":
+                            Classify = JsonConvert.DeserializeObject<Classify>(item.Result.ToString());
+                            Classify.Text = Text;
+                            break;
 
-                    case "concepts":
-                        Concepts = JsonConvert.DeserializeObject<Concepts>(item.Result.ToString());
-                        Concepts.Text = Text;
-                        break;
+                        case "concepts":
+                            Concepts = JsonConvert.DeserializeObject<Concepts>(item.Result.ToString());
+                            Concepts.Text = Text;
+                            break;
 
-                    case "entities":
-                        Entities = JsonConvert.DeserializeObject<Entities>(item.Result.ToString());
-                        Entities.Text = Text;
-                        break;
+                        case "entities":
+                            Entities = JsonConvert.DeserializeObject<Entities>(item.Result.ToString());
+                            Entities.Text = Text;
+                            break;
 
-                    case "extract":
-                        Extract = JsonConvert.DeserializeObject<Extract>(item.Result.ToString());
-                        break;
+                        case "extract":
+                            Extract = JsonConvert.DeserializeObject<Extract>(item.Result.ToString());
+                            break;
 
-                    case "hashtags":
-                        Hashtags = JsonConvert.DeserializeObject<Hashtags>(item.Result.ToString());
-                        Hashtags.Text = Text;
-                        break;
+                        case "hashtags":
+                            Hashtags = JsonConvert.DeserializeObject<Hashtags>(item.Result.ToString());
+                            Hashtags.Text = Text;
+                            break;
 
-                    case "language":
-                        Language = JsonConvert.DeserializeObject<Language>(item.Result.ToString());
-                        Language.Text = Text;
-                        break;
+                        case "language":
+                            Language = JsonConvert.DeserializeObject<Language>(item.Result.ToString());
+                            Language.Text = Text;
+                            break;
 
-                    case "sentiment":
-                        Sentiment = JsonConvert.DeserializeObject<Sentiment>(item.Result.ToString());
-                        Sentiment.Text = Text;
-                        break;
+                        case "sentiment":
+                            Sentiment = JsonConvert.DeserializeObject<Sentiment>(item.Result.ToString());
+                            Sentiment.Text = Text;
+                            break;
 
-                    case "summarize":
-                        Summarize = JsonConvert.DeserializeObject<Summarize>(item.Result.ToString());
-                        Summarize.Text = Text;
-                        break;
+                        case "summarize":
+                            Summarize = JsonConvert.DeserializeObject<Summarize>(item.Result.ToString());
+                            Summarize.Text = Text;
+                            break;
+                    }
                 }
             }
         }

@@ -34,17 +34,27 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string text, string title, string url, string mode, string sentencesNumber, string sentencesPercentage)
         {
-            var parameters = new ApiParameters(url, text);
-            parameters.Add("title", title).
-                Add("mode", mode).
-                AddNonPositiveInt("sentences_number", sentencesNumber).
-                AddNonPositiveInt("sentences_percentage", sentencesPercentage);
+            try
+            {
+                Exception = null;
 
-            Connection connection = new Connection(Configuration.Endpoints["Summarize"], parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+                var parameters = new ApiParameters(url, text);
+                parameters.Add("title", title).
+                    Add("mode", mode).
+                    AddNonPositiveInt("sentences_number", sentencesNumber).
+                    AddNonPositiveInt("sentences_percentage", sentencesPercentage);
 
-            return response;
+                Connection connection = new Connection(Configuration.Endpoints["Summarize"], parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
         public string[] Sentences { get; set; }
@@ -54,8 +64,8 @@ namespace Aylien.TextApi
         {
             Summarize m = JsonConvert.DeserializeObject<Summarize>(jsonString);
 
-            Sentences = m.Sentences;
-            Text = m.Text;
+            Sentences = m?.Sentences;
+            Text = m?.Text;
         }
     }
 }

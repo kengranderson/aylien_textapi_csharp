@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 
+using System;
 using System.Collections.Generic;
 
 namespace Aylien.TextApi
@@ -35,6 +36,8 @@ namespace Aylien.TextApi
         {
             configuration = config;
         }
+
+        public Exception Exception { get; set; }
 
         //protected void AddUrl(List<Dictionary<string, string>> dict, string key, string value)
         //{

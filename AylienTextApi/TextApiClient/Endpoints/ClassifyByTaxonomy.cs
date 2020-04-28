@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Aylien.TextApi
@@ -32,17 +33,27 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string taxonomy, string url, string text, string language)
         {
-            var parameters = new ApiParameters(url, text, language);
+            try
+            {
+                Exception = null;
 
-            if (string.IsNullOrEmpty(taxonomy))
-                throw new Error("Invalid taxonomy. Taxonomy can't be blank.");
+                var parameters = new ApiParameters(url, text, language);
 
-            var endpoint = Configuration.Endpoints["ClassifyByTaxonomy"].Replace(":taxonomy", taxonomy);
-            Connection connection = new Connection(endpoint, parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+                if (string.IsNullOrEmpty(taxonomy))
+                    throw new Error("Invalid taxonomy. Taxonomy can't be blank.");
 
-            return response;
+                var endpoint = Configuration.Endpoints["ClassifyByTaxonomy"].Replace(":taxonomy", taxonomy);
+                Connection connection = new Connection(endpoint, parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
         public TaxonomicClassification[] Categories { get; set; }
@@ -54,10 +65,10 @@ namespace Aylien.TextApi
         {
             ClassifyByTaxonomy m = JsonConvert.DeserializeObject<ClassifyByTaxonomy>(jsonString);
 
-            Categories = m.Categories;
-            Text = m.Text;
-            Language = m.Language;
-            Taxonomy = m.Taxonomy;
+            Categories = m?.Categories;
+            Text = m?.Text;
+            Language = m?.Language;
+            Taxonomy = m?.Taxonomy;
         }
     }
 

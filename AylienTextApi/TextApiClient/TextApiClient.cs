@@ -30,7 +30,7 @@ namespace Aylien.TextApi
         readonly Configuration configuration;
         Dictionary<string, int> rateLimit = new Dictionary<string, int>
         {
-            {"Limit", -1},
+            { "Limit", -1},
             { "Remaining", -1},
             { "Reset", -1}
         };
@@ -303,7 +303,7 @@ namespace Aylien.TextApi
         /// <param name="defaultValue"></param>
         /// <returns></returns>
         int SafeParse(Response r, string key, int defaultValue) {
-            int.TryParse(r.ResponseHeader.GetValues(key).FirstOrDefault(), out defaultValue);
+            int.TryParse(r?.ResponseHeader.GetValues(key).FirstOrDefault(), out defaultValue);
             return defaultValue;
         }
     }

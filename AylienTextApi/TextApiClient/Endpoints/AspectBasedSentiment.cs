@@ -17,6 +17,7 @@ limitations under the License.
 #endregion
 
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Aylien.TextApi
@@ -32,20 +33,30 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string domain, string url, string text)
         {
-            var parameters = new ApiParameters(url, text);
+            try
+            {
+                Exception = null;
 
-            if (string.IsNullOrEmpty(domain))
-                throw new Error("Invalid Domain. Domain can't be blank.");
+                var parameters = new ApiParameters(url, text);
 
-            var endpoint = Configuration.Endpoints["AspectBasedSentiment"].Replace(":domain", domain);
-            Connection connection = new Connection(endpoint, parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+                if (string.IsNullOrEmpty(domain))
+                    throw new Error("Invalid Domain. Domain can't be blank.");
 
-            return response;
+                var endpoint = Configuration.Endpoints["AspectBasedSentiment"].Replace(":domain", domain);
+                Connection connection = new Connection(endpoint, parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
-        public string Text { get; set; }
+    public string Text { get; set; }
         public string Domain { get; set; }
         public Aspect[] Aspects { get; set; }
         public Sentence[] Sentences { get; set; }
@@ -54,10 +65,10 @@ namespace Aylien.TextApi
         {
             AspectBasedSentiment m = JsonConvert.DeserializeObject<AspectBasedSentiment>(jsonString);
 
-            Text = m.Text;
-            Domain = m.Domain;
-            Aspects = m.Aspects;
-            Sentences = m.Sentences;
+            Text = m?.Text;
+            Domain = m?.Domain;
+            Aspects = m?.Aspects;
+            Sentences = m?.Sentences;
         }
     }
 

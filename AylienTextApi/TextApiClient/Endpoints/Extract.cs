@@ -34,16 +34,26 @@ namespace Aylien.TextApi
 
         internal async Task<Response> callAsync(string url, string html, string bestImage, string keepHtmlFormatting)
         {
-            var parameters = new ApiParameters(url).
-                Add("html", html).
-                Add("best_image", bestImage).
-                Add("keep_html_formatting", keepHtmlFormatting);
+            try
+            {
+                Exception = null;
 
-            Connection connection = new Connection(Configuration.Endpoints["Extract"], parameters, configuration);
-            var response = await connection.requestAsync().ConfigureAwait(false);
-            populateData(response.ResponseResult);
+                var parameters = new ApiParameters(url).
+                    Add("html", html).
+                    Add("best_image", bestImage).
+                    Add("keep_html_formatting", keepHtmlFormatting);
 
-            return response;
+                Connection connection = new Connection(Configuration.Endpoints["Extract"], parameters, configuration);
+                var response = await connection.requestAsync().ConfigureAwait(false);
+                populateData(response.ResponseResult);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+                return null;
+            }
         }
 
         public string Title { get; set; }
