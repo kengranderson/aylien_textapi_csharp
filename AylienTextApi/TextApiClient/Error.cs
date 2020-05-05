@@ -47,7 +47,7 @@ namespace Aylien.TextApi
         /// <param name="message">Message</param>
         public Error(string message)
         {
-            this.Message = message;
+            Message = message;
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace Aylien.TextApi
         /// <param name="closeResponse">If True, the WebException.Response object is closed.</param>
         public Error(WebException ex, bool closeResponse)
         {
-            this.Status = ((HttpWebResponse)ex.Response).StatusCode;
-            this.Message = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()).ReadToEnd();
+            Status = ((HttpWebResponse)ex.Response).StatusCode;
+            Message = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()).ReadToEnd();
 
             if (closeResponse)
             {

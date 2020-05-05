@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 Copyright 2016 Aylien, Inc. All Rights Reserved.
 
@@ -16,6 +16,7 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -286,6 +287,8 @@ namespace Aylien.TextApi
             }
         }
 
+        public Exception LastException { get; set; }
+
         void extractRateLimitParameters(Response r) {
             RateLimit = new Dictionary<string, int>
             {
@@ -293,6 +296,8 @@ namespace Aylien.TextApi
                 {"Remaining", SafeParse(r, "X-RateLimit-Remaining", -1)},
                 {"Reset", SafeParse(r, "X-RateLimit-Reset", -1)}
             };
+
+            LastException = r.Exception;
         }
 
         /// <summary>

@@ -67,9 +67,16 @@ namespace Aylien.TextApi
 
                 return returnResponse;
             }
-            catch (WebException we)
+            catch (WebException ex)
             {
-                throw new Error(we, true);
+                throw new Error(ex, true);
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    Exception = ex
+                };
             }
         }
 
@@ -145,6 +152,10 @@ namespace Aylien.TextApi
 
     class Response
     {
+        public Response() 
+        { 
+        }
+
         public Response(string responseString, HttpResponseHeaders headers)
         {
             ResponseResult = responseString;
@@ -153,5 +164,6 @@ namespace Aylien.TextApi
 
         internal string ResponseResult { get; set; }
         internal HttpResponseHeaders ResponseHeader { get; set; }
+        public Exception Exception { get; set; }
     }
 }
