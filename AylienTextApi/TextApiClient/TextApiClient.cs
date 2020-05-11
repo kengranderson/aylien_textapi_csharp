@@ -392,7 +392,7 @@ namespace Aylien.TextApi
             }
             else
             {
-                var value = r.ResponseHeader.GetValues(key).FirstOrDefault();
+                var value = r.ResponseHeader.GetValues(key)?.FirstOrDefault();
                 int.TryParse(value, out defaultValue);
                 return defaultValue;
             }

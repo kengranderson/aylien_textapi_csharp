@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Aylien.TextApi.Tests
@@ -8,7 +9,7 @@ namespace Aylien.TextApi.Tests
     [TestClass]
     public class UnitTestClient
     {
-        private string url, text, title, imageUrl, taxonomy, domain;
+        private string url, text, title, imageUrl, taxonomy, domain, html;
         private Client client;
 
         private void setRequireVariables()
@@ -23,6 +24,7 @@ namespace Aylien.TextApi.Tests
             title = "Test title";
             taxonomy = "iab-qag";
             domain = "airlines";
+            html = File.ReadAllText("sample.html");
         }
 
         [TestMethod]
@@ -65,6 +67,15 @@ namespace Aylien.TextApi.Tests
         {
             setRequireVariables();
             Extract extract = Task.Run(async () => await client.ExtractAsync(url: url).ConfigureAwait(false)).Result;
+
+            Assert.IsInstanceOfType(extract, typeof(Extract));
+        }
+
+        [TestMethod]
+        public void ShouldReturnAnInstanceOfExtractFromHtml()
+        {
+            setRequireVariables();
+            Extract extract = Task.Run(async () => await client.ExtractAsync(html: html).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(extract, typeof(Extract));
         }
