@@ -45,7 +45,7 @@ namespace Aylien.TextApi
                 var endpoint = Configuration.Endpoints["AspectBasedSentiment"].Replace(":domain", domain);
                 Connection connection = new Connection(endpoint, parameters, configuration);
                 var response = await connection.requestAsync().ConfigureAwait(false);
-                populateData(response.ResponseResult);
+                callIf(populateData, response.ResponseResult);
 
                 return response;
             }

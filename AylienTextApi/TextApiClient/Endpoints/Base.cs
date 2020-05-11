@@ -18,7 +18,6 @@ limitations under the License.
 
 
 using System;
-using System.Collections.Generic;
 
 namespace Aylien.TextApi
 {
@@ -38,6 +37,14 @@ namespace Aylien.TextApi
         }
 
         public Exception Exception { get; set; }
+
+        protected void callIf(Action<string> method, string parm)
+        { 
+            if (parm != null)
+            {
+                method(parm);
+            }
+        }
 
         //protected void AddUrl(List<Dictionary<string, string>> dict, string key, string value)
         //{

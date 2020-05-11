@@ -46,7 +46,7 @@ namespace Aylien.TextApi
 
                 Connection connection = new Connection(Configuration.Endpoints["Summarize"], parameters, configuration);
                 var response = await connection.requestAsync().ConfigureAwait(false);
-                populateData(response.ResponseResult);
+                callIf(populateData, response.ResponseResult);
 
                 return response;
             }

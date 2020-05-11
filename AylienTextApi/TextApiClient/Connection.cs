@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,6 +62,12 @@ namespace Aylien.TextApi
                 Request = null;
 
                 var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                if (responseString == "Authentication failed")
+                {
+                    throw new SecurityException(responseString);
+                }
+
                 Response returnResponse = new Response(responseString, response.Headers);
                 response.Content.Dispose();
                 response.Dispose();

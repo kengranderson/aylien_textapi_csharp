@@ -45,7 +45,7 @@ namespace Aylien.TextApi
                 var endpoint = Configuration.Endpoints["ClassifyByTaxonomy"].Replace(":taxonomy", taxonomy);
                 Connection connection = new Connection(endpoint, parameters, configuration);
                 var response = await connection.requestAsync().ConfigureAwait(false);
-                populateData(response.ResponseResult);
+                callIf(populateData, response.ResponseResult);
 
                 return response;
             }

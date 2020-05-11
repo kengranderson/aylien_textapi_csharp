@@ -1,13 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Threading.Tasks;
 
 namespace Aylien.TextApi.Tests
 {
     [TestClass]
     public class UnitTestClient
     {
-        private string url, text, phrase, title, imageUrl, taxonomy, domain;
+        private string url, text, title, imageUrl, taxonomy, domain;
         private Client client;
 
         private void setRequireVariables()
@@ -16,10 +17,9 @@ namespace Aylien.TextApi.Tests
             var appKey = ConfigurationManager.AppSettings["appKey"];
 
             client = new Client(appId, appKey);
-            url = "http://www.bbc.co.uk/news/world-australia-30544493#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa";
+            url = "https://www.wbap.com/2020/05/10/murder-charges-laid-2-suspects-arrested-in-the-georgia-shooting-of-an-african-american-man/";
             imageUrl = "https://consumeraffairs.global.ssl.fastly.net/files/news/hamburger.png";
             text = "John is a very good football player!";
-            phrase = "Dublin";
             title = "Test title";
             taxonomy = "iab-qag";
             domain = "airlines";
@@ -30,14 +30,14 @@ namespace Aylien.TextApi.Tests
         public void ShouldThrowErrorWithUnauthenticatedClient()
         {
             Client invalidClient = new Client("WrongAppId", "WrongAppKey");
-            Sentiment sentiment = invalidClient.Sentiment(text: "John is a bad football player");
+            Sentiment sentiment = Task.Run(async () => await invalidClient.SentimentAsync(text: "John is a bad football player").ConfigureAwait(false)).Result;
         }
 
         [TestMethod]
         public void ShouldReturnAnInstanceOfClassify()
         {
             setRequireVariables();
-            Classify classify = client.Classify(text: text);
+            Classify classify = Task.Run(async () => await client.ClassifyAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(classify, typeof(Classify));
         }
@@ -46,7 +46,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfConcepts()
         {
             setRequireVariables();
-            Concepts concepts = client.Concepts(text: text);
+            Concepts concepts = Task.Run(async () => await client.ConceptsAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(concepts, typeof(Concepts));
         }
@@ -55,7 +55,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfEntities()
         {
             setRequireVariables();
-            Entities entities = client.Entities(text: text);
+            Entities entities = Task.Run(async () => await client.EntitiesAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(entities, typeof(Entities));
         }
@@ -64,7 +64,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfExtract()
         {
             setRequireVariables();
-            Extract extract = client.Extract(url: url);
+            Extract extract = Task.Run(async () => await client.ExtractAsync(url: url).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(extract, typeof(Extract));
         }
@@ -73,7 +73,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfHashtags()
         {
             setRequireVariables();
-            Hashtags hashtags = client.Hashtags(text: text);
+            Hashtags hashtags = Task.Run(async () => await client.HashtagsAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(hashtags, typeof(Hashtags));
         }
@@ -82,7 +82,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfLanguage()
         {
             setRequireVariables();
-            Language language = client.Language(text: text);
+            Language language = Task.Run(async () => await client.LanguageAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(language, typeof(Language));
         }
@@ -91,7 +91,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfSentiment()
         {
             setRequireVariables();
-            Sentiment sentiment = client.Sentiment(text: text);
+            Sentiment sentiment = Task.Run(async () => await client.SentimentAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(sentiment, typeof(Sentiment));
         }
@@ -100,7 +100,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfSummarize()
         {
             setRequireVariables();
-            Summarize summarize = client.Summarize(text: text, title: title);
+            Summarize summarize = Task.Run(async () => await client.SummarizeAsync(text: text, title: title).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(summarize, typeof(Summarize));
         }
@@ -110,7 +110,7 @@ namespace Aylien.TextApi.Tests
         {
             setRequireVariables();
             string[] endpoints = new string[] { "classify", "concepts", "entities", "extract", "hashtags", "language", "sentiment", "summarize" };
-            Combined combined = client.Combined(url: url, endpoints: endpoints);
+            Combined combined = Task.Run(async () => await client.CombinedAsync(url: url, endpoints: endpoints).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(combined, typeof(Combined));
         }
@@ -119,7 +119,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfImageTags()
         {
             setRequireVariables();
-            ImageTags imageTags = client.ImageTags(url: imageUrl);
+            ImageTags imageTags = Task.Run(async () => await client.ImageTagsAsync(url: imageUrl).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(imageTags, typeof(ImageTags));
         }
@@ -128,7 +128,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfClassifyByTaxonomy()
         {
             setRequireVariables();
-            ClassifyByTaxonomy classifyByTaxonomy = client.ClassifyByTaxonomy(taxonomy, url: url);
+            ClassifyByTaxonomy classifyByTaxonomy = Task.Run(async () => await client.ClassifyByTaxonomyAsync(taxonomy, url: url).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(classifyByTaxonomy, typeof(ClassifyByTaxonomy));
         }
@@ -137,7 +137,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfAspectBasedSentiment()
         {
             setRequireVariables();
-            AspectBasedSentiment aspectBasedSentiment = client.AspectBasedSentiment(domain, text: text);
+            AspectBasedSentiment aspectBasedSentiment = Task.Run(async () => await client.AspectBasedSentimentAsync(domain, text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(aspectBasedSentiment, typeof(AspectBasedSentiment));
         }
@@ -146,7 +146,7 @@ namespace Aylien.TextApi.Tests
         public void ShouldReturnAnInstanceOfElsa()
         {
             setRequireVariables();
-            EntityLevelSentiment elsa = client.EntityLevelSentiment(text: text);
+            EntityLevelSentiment elsa = Task.Run(async () => await client.EntityLevelSentimentAsync(text: text).ConfigureAwait(false)).Result;
 
             Assert.IsInstanceOfType(elsa, typeof(EntityLevelSentiment));
         }

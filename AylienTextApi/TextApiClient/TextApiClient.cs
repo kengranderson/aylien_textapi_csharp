@@ -59,6 +59,12 @@ namespace Aylien.TextApi
             var extract = new Extract(configuration);
             var r = await extract.callAsync(url, html, bestImage.ToString(), keepHtmlFormatting.ToString()).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                extract.Exception = r.Exception;
+            }
+
             return extract;
         }
 
@@ -84,6 +90,12 @@ namespace Aylien.TextApi
             var summarize = new Summarize(configuration);
             var r = await summarize.callAsync(text, title, url, mode, sentencesNumber.ToString(), sentencesPercentage.ToString()).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                summarize.Exception = r.Exception;
+            }
+
             return summarize;
         }
 
@@ -101,6 +113,12 @@ namespace Aylien.TextApi
             var classify = new Classify(configuration);
             var r = await classify.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                classify.Exception = r.Exception;
+            }
+
             return classify;
         }
 
@@ -119,6 +137,12 @@ namespace Aylien.TextApi
             var classify = new ClassifyByTaxonomy(configuration);
             var r = await classify.callAsync(taxonomy, url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                classify.Exception = r.Exception;
+            }
+
             return classify;
         }
 
@@ -138,6 +162,12 @@ namespace Aylien.TextApi
             var sentiment = new Sentiment(configuration);
             var r = await sentiment.callAsync(url, text, mode, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                sentiment.Exception = r.Exception;
+            }
+
             return sentiment;
         }
 
@@ -154,6 +184,12 @@ namespace Aylien.TextApi
             var entities = new Entities(configuration);
             var r = await entities.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                entities.Exception = r.Exception;
+            }
+
             return entities;
         }
 
@@ -173,6 +209,12 @@ namespace Aylien.TextApi
             var concepts = new Concepts(configuration);
             var r = await concepts.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                concepts.Exception = r.Exception;
+            }
+
             return concepts;
         }
 
@@ -190,6 +232,12 @@ namespace Aylien.TextApi
             var hashtags = new Hashtags(configuration);
             var r = await hashtags.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                hashtags.Exception = r.Exception;
+            }
+
             return hashtags;
         }
 
@@ -205,6 +253,12 @@ namespace Aylien.TextApi
             var language = new Language(configuration);
             var r = await language.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                language.Exception = r.Exception;
+            }
+
             return language;
         }
 
@@ -220,6 +274,12 @@ namespace Aylien.TextApi
             var combined = new Combined(configuration);
             var r = await combined.callAsync(url, text, endpoints).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                combined.Exception = r.Exception;
+            }
+
             return combined;
         }
 
@@ -233,6 +293,12 @@ namespace Aylien.TextApi
             var imageTags = new ImageTags(configuration);
             var r = await imageTags.callAsync(url).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                imageTags.Exception = r.Exception;
+            }
+
             return imageTags;
         }
 
@@ -248,6 +314,12 @@ namespace Aylien.TextApi
             var aspectBasedSentiment = new AspectBasedSentiment(configuration);
             var r = await aspectBasedSentiment.callAsync(domain, url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                aspectBasedSentiment.Exception = r.Exception;
+            }
+
             return aspectBasedSentiment;
         }
 
@@ -262,6 +334,12 @@ namespace Aylien.TextApi
             var elsa = new EntityLevelSentiment(configuration);
             var r = await elsa.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
+
+            if (r?.Exception != null)
+            {
+                elsa.Exception = r.Exception;
+            }
+
             return elsa;
         }
 
@@ -276,7 +354,7 @@ namespace Aylien.TextApi
                 if (rateLimit["Limit"] == -1 && rateLimit["Remaining"] == -1 && rateLimit["Reset"] == -1)
                 {
                     var lang = new Language(configuration);
-                    var r = Task.Run(() => lang.callAsync(null, "Test")).Result;
+                    var r = Task.Run(async () => await lang.callAsync(null, "Test").ConfigureAwait(false)).Result;
                     extractRateLimitParameters(r);
                 }
                 return rateLimit;
@@ -308,8 +386,16 @@ namespace Aylien.TextApi
         /// <param name="defaultValue"></param>
         /// <returns></returns>
         int SafeParse(Response r, string key, int defaultValue) {
-            int.TryParse(r?.ResponseHeader.GetValues(key).FirstOrDefault(), out defaultValue);
-            return defaultValue;
+            if (r == null || r.ResponseHeader == null)
+            {
+                return defaultValue;
+            }
+            else
+            {
+                var value = r.ResponseHeader.GetValues(key).FirstOrDefault();
+                int.TryParse(value, out defaultValue);
+                return defaultValue;
+            }
         }
     }
 }

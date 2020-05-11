@@ -37,7 +37,7 @@ namespace Aylien.TextApi
 
                 Connection connection = new Connection(Configuration.Endpoints["Sentiment"], parameters, configuration);
                 var response = await connection.requestAsync().ConfigureAwait(false);
-                populateData(response.ResponseResult);
+                callIf(populateData, response.ResponseResult);
 
                 return response;
             }
