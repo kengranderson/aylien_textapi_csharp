@@ -60,7 +60,7 @@ namespace Aylien.TextApi
             var r = await extract.callAsync(url, html, bestImage.ToString(), keepHtmlFormatting.ToString()).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 extract.Exception = r.Exception;
             }
@@ -91,7 +91,7 @@ namespace Aylien.TextApi
             var r = await summarize.callAsync(text, title, url, mode, sentencesNumber.ToString(), sentencesPercentage.ToString()).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 summarize.Exception = r.Exception;
             }
@@ -114,7 +114,7 @@ namespace Aylien.TextApi
             var r = await classify.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 classify.Exception = r.Exception;
             }
@@ -138,7 +138,7 @@ namespace Aylien.TextApi
             var r = await classify.callAsync(taxonomy, url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 classify.Exception = r.Exception;
             }
@@ -163,7 +163,7 @@ namespace Aylien.TextApi
             var r = await sentiment.callAsync(url, text, mode, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 sentiment.Exception = r.Exception;
             }
@@ -185,7 +185,7 @@ namespace Aylien.TextApi
             var r = await entities.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 entities.Exception = r.Exception;
             }
@@ -210,7 +210,7 @@ namespace Aylien.TextApi
             var r = await concepts.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 concepts.Exception = r.Exception;
             }
@@ -233,7 +233,7 @@ namespace Aylien.TextApi
             var r = await hashtags.callAsync(url, text, language).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 hashtags.Exception = r.Exception;
             }
@@ -254,7 +254,7 @@ namespace Aylien.TextApi
             var r = await language.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 language.Exception = r.Exception;
             }
@@ -275,7 +275,7 @@ namespace Aylien.TextApi
             var r = await combined.callAsync(url, text, endpoints).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 combined.Exception = r.Exception;
             }
@@ -294,7 +294,7 @@ namespace Aylien.TextApi
             var r = await imageTags.callAsync(url).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 imageTags.Exception = r.Exception;
             }
@@ -315,7 +315,7 @@ namespace Aylien.TextApi
             var r = await aspectBasedSentiment.callAsync(domain, url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 aspectBasedSentiment.Exception = r.Exception;
             }
@@ -335,7 +335,7 @@ namespace Aylien.TextApi
             var r = await elsa.callAsync(url, text).ConfigureAwait(false);
             extractRateLimitParameters(r);
 
-            if (r?.Exception != null)
+            if (r != null && r.Exception != null)
             {
                 elsa.Exception = r.Exception;
             }
@@ -375,7 +375,7 @@ namespace Aylien.TextApi
                 {"Reset", SafeParse(r, "X-RateLimit-Reset", -1)}
             };
 
-            LastException = r.Exception;
+            LastException = r?.Exception;
         }
 
         /// <summary>
